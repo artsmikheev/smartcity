@@ -24,11 +24,15 @@ export default function ConstructionScreen() {
         </View>
         <View style={styles.notice}><SignalDot color={COLORS.amber} /><Text style={styles.noticeText}>{DEMO_NOTICE}</Text></View>
         <SectionHeading title="Лента проекта" />
-        <View style={styles.timeline}>{constructionUpdates.map((update, index) => <View key={update.id} style={styles.timelineRow}><View style={styles.timelineRail}><View style={[styles.timelineDot, { backgroundColor: update.tone }]} />{index < constructionUpdates.length - 1 ? <View style={styles.timelineLine} /> : null}</View><View style={styles.updateCard}><View style={styles.updateTop}><Eyebrow color={update.tone}>{update.label}</Eyebrow><Text style={styles.updateDate}>{update.date}</Text></View><Text style={styles.updateTitle}>{update.title}</Text><Text style={styles.updateCopy}>{update.copy}</Text></View></View>)}</View>
+        <View style={styles.timeline}>{constructionUpdates.map((update, index) => <View key={update.id} style={styles.timelineRow}><View style={styles.timelineRail}><View style={[styles.timelineDot, { backgroundColor: toneColor(update.tone) }]} />{index < constructionUpdates.length - 1 ? <View style={styles.timelineLine} /> : null}</View><View style={styles.updateCard}><View style={styles.updateTop}><Eyebrow color={toneColor(update.tone)}>{update.label}</Eyebrow><Text style={styles.updateDate}>{update.date}</Text></View><Text style={styles.updateTitle}>{update.title}</Text><Text style={styles.updateCopy}>{update.copy}</Text></View></View>)}</View>
         <PrimaryButton label="Получить обновление первым" icon="notifications-outline" onPress={() => router.push({ pathname: "/lead", params: { type: "updates" } })} />
       </ScrollView>
     </ScreenContainer>
   );
+}
+
+function toneColor(tone: "lime" | "sand" | "amber") {
+  return tone === "sand" ? COLORS.sand : COLORS.amber;
 }
 
 const styles = StyleSheet.create({

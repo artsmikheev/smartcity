@@ -32,7 +32,7 @@ const env = {
   appSlug: "smartcity",
   // S3 URL of the app logo - set this to the URL returned by generate_image when creating custom logo
   // Leave empty to use the default icon from assets/images/icon.png
-  logoUrl: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723271771/qleZSBOtFUGVnllO.png",
+  logoUrl: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723271771/ZImWcbhCpBrbicTH.png",
   scheme: schemeFromBundleId,
   iosBundleId: bundleId,
   androidPackage: bundleId,
@@ -77,7 +77,7 @@ const config: ExpoConfig = {
   },
   android: {
     adaptiveIcon: {
-      backgroundColor: "#111315",
+      backgroundColor: "#484848",
       foregroundImage: "./assets/images/android-icon-foreground.png",
       backgroundImage: "./assets/images/android-icon-background.png",
       monochromeImage: "./assets/images/android-icon-monochrome.png",
@@ -126,9 +126,9 @@ const config: ExpoConfig = {
         image: "./assets/images/splash-icon.png",
         imageWidth: 200,
         resizeMode: "contain",
-        backgroundColor: "#111315",
+        backgroundColor: "#484848",
         dark: {
-          backgroundColor: "#111315",
+          backgroundColor: "#484848",
         },
       },
     ],

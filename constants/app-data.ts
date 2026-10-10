@@ -1,15 +1,15 @@
 export const COLORS = {
-  background: "#111315",
-  surface: "#1A1D1F",
-  surfaceRaised: "#222628",
-  foreground: "#F4F2EC",
-  muted: "#9B9A94",
-  mutedDark: "#6F7474",
-  border: "#34383A",
-  lime: "#D7F54A",
-  sand: "#E7E1D5",
-  amber: "#F4B860",
-  coral: "#F37A72",
+  background: "#484848",
+  surface: "#484848",
+  surfaceRaised: "rgba(237, 234, 228, 0.10)",
+  foreground: "#EDEAE4",
+  muted: "#8A8887",
+  mutedDark: "#8A8887",
+  border: "#8A8887",
+  lime: "#B88F00",
+  sand: "#EDEAE4",
+  amber: "#B88F00",
+  coral: "#B88F00",
 };
 
 export const DEMO_NOTICE = "Демонстрационный экран — цифры и условия уточняет команда проекта.";
