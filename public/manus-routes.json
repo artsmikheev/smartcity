@@ -1,0 +1,1 @@
+{"routes":[{"path":"/","title":"Главная"},{"path":"/layouts","title":"Планировки"},{"path":"/construction","title":"Ход стройки"},{"path":"/profile","title":"Профиль"},{"path":"/lead","title":"Заявка"},{"path":"/about","title":"О проекте"},{"path":"/contacts","title":"Контакты"},{"path":"/faq","title":"FAQ"},{"path":"/oauth/callback","title":"Авторизация"}]}
