@@ -20,7 +20,7 @@ export default function HomeScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <View>
-            <Eyebrow color={COLORS.lime}>Южный въезд / Реутов</Eyebrow>
+            <Eyebrow color={COLORS.lime}>Наукоград / Реутов</Eyebrow>
             <Text style={styles.wordmark}>УМНЫЙ ГОРОД</Text>
           </View>
           <IconButton icon="notifications-outline" label="Уведомления" onPress={() => router.push("/profile")} />
