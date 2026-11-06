@@ -1,0 +1,170 @@
+[
+  {
+    "foreground": "foreground",
+    "background": "background",
+    "colors": "#EDEAE4 / #1C1B1A",
+    "ratio": 14.32,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "muted",
+    "background": "background",
+    "colors": "#BCB9B7 / #1C1B1A",
+    "ratio": 8.81,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "accent",
+    "background": "background",
+    "colors": "#B88F00 / #1C1B1A",
+    "ratio": 5.71,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "border",
+    "background": "background",
+    "colors": "#9A9896 / #1C1B1A",
+    "ratio": 5.98,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "error",
+    "background": "background",
+    "colors": "#F37A72 / #1C1B1A",
+    "ratio": 6.42,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "success",
+    "background": "background",
+    "colors": "#4ADE80 / #1C1B1A",
+    "ratio": 9.87,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "foreground",
+    "background": "cardBackground",
+    "colors": "#EDEAE4 / #262422",
+    "ratio": 12.88,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "muted",
+    "background": "cardBackground",
+    "colors": "#BCB9B7 / #262422",
+    "ratio": 7.93,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "accent",
+    "background": "cardBackground",
+    "colors": "#B88F00 / #262422",
+    "ratio": 5.13,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "border",
+    "background": "cardBackground",
+    "colors": "#9A9896 / #262422",
+    "ratio": 5.38,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "error",
+    "background": "cardBackground",
+    "colors": "#F37A72 / #262422",
+    "ratio": 5.77,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "success",
+    "background": "cardBackground",
+    "colors": "#4ADE80 / #262422",
+    "ratio": 8.88,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "foreground",
+    "background": "cardDeep",
+    "colors": "#EDEAE4 / #121212",
+    "ratio": 15.6,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "muted",
+    "background": "cardDeep",
+    "colors": "#BCB9B7 / #121212",
+    "ratio": 9.6,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "accent",
+    "background": "cardDeep",
+    "colors": "#B88F00 / #121212",
+    "ratio": 6.22,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "border",
+    "background": "cardDeep",
+    "colors": "#9A9896 / #121212",
+    "ratio": 6.52,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "error",
+    "background": "cardDeep",
+    "colors": "#F37A72 / #121212",
+    "ratio": 6.99,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "success",
+    "background": "cardDeep",
+    "colors": "#4ADE80 / #121212",
+    "ratio": 10.75,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "accentForeground",
+    "background": "accent",
+    "colors": "#1A1A1A / #B88F00",
+    "ratio": 5.77,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "foreground",
+    "background": "pill over white (95% dark composite)",
+    "colors": "#EDEAE4 / #272625",
+    "ratio": 12.58,
+    "normalAA": true,
+    "uiAA": true
+  },
+  {
+    "foreground": "muted",
+    "background": "pill over white (95% dark composite)",
+    "colors": "#BCB9B7 / #272625",
+    "ratio": 7.74,
+    "normalAA": true,
+    "uiAA": true
+  }
+]

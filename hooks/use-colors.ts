@@ -1,12 +1,18 @@
-import { Colors, type ColorScheme, type ThemeColorPalette } from "@/constants/theme";
-import { useColorScheme } from "./use-color-scheme";
+import { COLORS } from "@/constants/theme";
 
-/**
- * Returns the current theme's color palette.
- * Usage: const colors = useColors(); then colors.text, colors.background, etc.
- */
-export function useColors(colorSchemeOverride?: ColorScheme): ThemeColorPalette {
-  const colorSchema = useColorScheme();
-  const scheme = (colorSchemeOverride ?? colorSchema ?? "light") as ColorScheme;
-  return Colors[scheme];
+// Starter component aliases are derived from the public tokens, not duplicated.
+const palette = {
+  ...COLORS,
+  text: COLORS.foreground,
+  tint: COLORS.accent,
+  icon: COLORS.muted,
+  surface: COLORS.cardBackground,
+  primary: COLORS.accent,
+  tabIconDefault: COLORS.muted,
+  tabIconSelected: COLORS.accent,
+};
+
+/** This brand uses one dark palette regardless of the device scheme. */
+export function useColors(_colorSchemeOverride?: "light" | "dark") {
+  return palette;
 }

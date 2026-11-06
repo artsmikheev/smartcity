@@ -114,3 +114,32 @@
 - Брендбук загружен и применён к палитре интерфейса; актуальные планировки, прайс-листы, юридические тексты и фото/рендеры по-прежнему не приложены, поэтому mock-контент явно маркирован.
 - Пользователь сообщил, что сейчас едет с Южного въезда; интерфейс не должен требовать длинного чтения или сложной навигации. Любые действия, связанные с отправкой формы, должны быть явным осознанным tap-flow и не выполняться автоматически.
 - Azure App Insights не является нативной функцией Expo starter автоматически: в MVP оставить безопасный интерфейс событий, а серверную отправку подключать после уточнения хостинга и connection string через защищённые секреты.
+
+## Git discipline
+
+После каждой принятой фазы и после каждого крупного изменения обязательно:
+
+```bash
+git add -A
+git commit -m "Phase X: ..."
+git push origin main
+git tag phase-X
+git push --tags
+```
+
+Нельзя переходить к следующей фазе без проверки, что commit присутствует в `origin/main`, а tag опубликован. Это обязательная защита от потери работы при завершении или переключении сессии.
+
+
+## Recovery R1.2 — текущий принятый scope
+
+После потери файлов R1.1 проверена на локальном PostgreSQL 16.15 compatibility harness. SQL-спецификация находится в restore-archive/supabase/; она не изменяется в R1.2. GitHub — отдельная страховочная копия (remote github); Manus-managed origin не меняется. Фазы сохраняются в github/main, и теги проверяются через ls-remote; это не Manus checkpoint и не production publish.
+
+Текущая финальная дизайн-система заменяет исторический графит выше: premium dark editorial; background #1C1B1A, cardBackground #262422, cardDeep #121212, foreground #EDEAE4, muted #BCB9B7, mutedDark #8A8887 (декоративный), accent #B88F00, accentForeground #1A1A1A, border #9A9896, error #F37A72, success #4ADE80. Значения принадлежат constants/app-data.ts; constants/theme.ts — единственная публичная точка входа. Шрифты: PlayfairDisplay_400Regular для serif ramp, sans системный без fontFamily. Mock-данные отдельно в constants/mock-data.ts, без изменений содержания. NativeWind и legacy hooks отображают семантические имена на эти же токены, без второй палитры.
+
+Реализуем только фундамент: SQL-типы 16 таблиц/7 enum и submit_lead/has_role из восстановленного SQL; Supabase client с AsyncStorage и placeholder при отсутствии env; font loader при сохранении Stack/провайдеров; глобальный floating pill с safe area. Конкретные экраны, ApartmentCard и форма не перерисовываются — только импорты/переименования удалённых токенов и paddingBottom 130 у таб-ScrollView. Native-only выводы проверяются отдельно от Expo Web.
+
+Уточнение пользователя от 07.11.2026: НЕ создавать отсутствующий favorites маршрут; временно оставить Стройка третьим табом. Поэтому текущие четыре таба: Главная / Планировки / Стройка / Профиль. Pill: left/right 20, bottom 20+insets.bottom, height 64, radius 32, rgba(28,27,26,0.95), boxShadow 0 8px 24px rgba(0,0,0,0.4). Pressable height 64, selected state и Ionicons. Активный circle 36/icon20, неактивный icon22, labels10; motion только лёгкая opacity обратная связь без slide между tabs.
+
+Ожидается pnpm check/lint/test, Expo Web screenshot 375×812 и contrast расчёт. Baseline этой восстановленной копии: 25 passing, 1 skipped (не потерянные прежние 30). После commit R1.2 и tag recovery-r1.2 на GitHub — СТОП до приёмки, R1.3+ не начинать.
+
+Финальная R1.2 проверка: pnpm check/lint/test PASS (25 passed, 1 skipped), Supabase compile-only RPC probe PASS, Playwright 375×812 PASS (pill 335×64, hit areas 83.75×64, четыре перехода/selected state/Enter); Playfair и Ionicons assets загружены. Полные evidence: docs/recovery-r1.2/. Marker для публикации страховочной копии: recovery-r1.2. R1.3 не начинать до приёмки.

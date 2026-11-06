@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
-import { COLORS } from "@/constants/app-data";
+import { COLORS } from "@/constants/theme";
 import { Eyebrow, PrimaryButton, Tag } from "@/components/app-ui";
 import { track } from "@/lib/telemetry";
 
@@ -39,7 +39,7 @@ export default function ConceptsScreen() {
             <View style={styles.heroTop}><Tag tone="lime">Визуализация</Tag><Text style={styles.counter}>{variants.findIndex((item) => item.id === active.id) + 1} / {variants.length}</Text></View>
             <View style={styles.heroCopy}><Text style={styles.heroTitle}>{active.kicker}</Text><Text style={styles.heroSubtitle}>{active.copy}</Text></View>
           </ImageBackground>
-          <View style={styles.panel}><View style={styles.panelHeader}><View><Eyebrow color={COLORS.lime}>Вариант концепта</Eyebrow><Text style={styles.panelTitle}>{active.label}</Text></View><View style={styles.mark}><Text style={styles.markText}>УГ</Text></View></View><Text style={styles.body}>Выберите визуальный сценарий для главного экрана приложения. Изображения взяты из материалов проекта.</Text><PrimaryButton label="Подобрать планировку" onPress={() => router.push("/layouts")} /><Text style={styles.note}>Визуализация не является подтверждением фактических характеристик.</Text></View>
+          <View style={styles.panel}><View style={styles.panelHeader}><View><Eyebrow color={COLORS.accent}>Вариант концепта</Eyebrow><Text style={styles.panelTitle}>{active.label}</Text></View><View style={styles.mark}><Text style={styles.markText}>УГ</Text></View></View><Text style={styles.body}>Выберите визуальный сценарий для главного экрана приложения. Изображения взяты из материалов проекта.</Text><PrimaryButton label="Подобрать планировку" onPress={() => router.push("/layouts")} /><Text style={styles.note}>Визуализация не является подтверждением фактических характеристик.</Text></View>
         </ScrollView>
         <View style={styles.tabBar}><Tab icon="home" label="Главная" /><Tab icon="images-outline" label="Концепты" active /><Tab icon="grid-outline" label="Планировки" /><Tab icon="person-outline" label="Профиль" /></View>
       </View>
@@ -48,11 +48,11 @@ export default function ConceptsScreen() {
 }
 
 function Tab({ icon, label, active = false }: { icon: keyof typeof Ionicons.glyphMap; label: string; active?: boolean }) {
-  return <View style={styles.tab}><Ionicons name={icon} size={17} color={active ? COLORS.lime : COLORS.muted} /><Text style={[styles.tabText, active && styles.tabTextActive]}>{label}</Text></View>;
+  return <View style={styles.tab}><Ionicons name={icon} size={17} color={active ? COLORS.accent : COLORS.muted} /><Text style={[styles.tabText, active && styles.tabTextActive]}>{label}</Text></View>;
 }
 
 const styles = StyleSheet.create({
-  stage: { flex: 1, backgroundColor: COLORS.sand, alignItems: "center", justifyContent: "center", paddingVertical: 24 },
+  stage: { flex: 1, backgroundColor: COLORS.foreground, alignItems: "center", justifyContent: "center", paddingVertical: 24 },
   stageLabel: { color: COLORS.background, fontSize: 11, letterSpacing: 1.7, fontWeight: "800", marginBottom: 12 },
   phone: { backgroundColor: COLORS.background, overflow: "hidden", borderWidth: 7, borderColor: "#242424", shadowColor: "#000", shadowOpacity: 0.3, shadowRadius: 30, shadowOffset: { width: 0, height: 16 }, elevation: 16 },
   speaker: { position: "absolute", zIndex: 3, top: 13, alignSelf: "center", width: 76, height: 17, borderRadius: 10, backgroundColor: "#242424" },
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   close: { width: 40, height: 40, borderRadius: 14, borderWidth: 1, borderColor: COLORS.border, alignItems: "center", justifyContent: "center" },
   selector: { flexDirection: "row", gap: 7 },
   selectorItem: { borderWidth: 1, borderColor: COLORS.border, borderRadius: 13, paddingHorizontal: 11, paddingVertical: 8 },
-  selectorItemActive: { backgroundColor: COLORS.lime, borderColor: COLORS.lime },
+  selectorItemActive: { backgroundColor: COLORS.accent, borderColor: COLORS.accent },
   selectorText: { color: COLORS.muted, fontSize: 10, fontWeight: "800" },
   selectorTextActive: { color: COLORS.background },
   hero: { height: 478, borderRadius: 24, overflow: "hidden", justifyContent: "space-between", padding: 16 },
@@ -76,12 +76,12 @@ const styles = StyleSheet.create({
   panel: { backgroundColor: COLORS.background, borderRadius: 23, borderWidth: 1, borderColor: COLORS.border, padding: 17 },
   panelHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 10 },
   panelTitle: { color: COLORS.foreground, fontSize: 24, lineHeight: 28, fontWeight: "800", marginTop: 4 },
-  mark: { width: 42, height: 42, borderRadius: 14, backgroundColor: COLORS.lime, alignItems: "center", justifyContent: "center" },
+  mark: { width: 42, height: 42, borderRadius: 14, backgroundColor: COLORS.accent, alignItems: "center", justifyContent: "center" },
   markText: { color: COLORS.background, fontSize: 14, fontWeight: "900" },
   body: { color: COLORS.muted, fontSize: 12, lineHeight: 18, marginBottom: 15 },
   note: { color: COLORS.mutedDark, fontSize: 9, lineHeight: 13, marginTop: 9 },
   tabBar: { position: "absolute", bottom: 0, left: 0, right: 0, minHeight: 65, paddingTop: 9, paddingBottom: 10, borderTopWidth: 1, borderTopColor: COLORS.border, backgroundColor: COLORS.background, flexDirection: "row", justifyContent: "space-around" },
   tab: { alignItems: "center", gap: 4 },
   tabText: { color: COLORS.muted, fontSize: 9, fontWeight: "700" },
-  tabTextActive: { color: COLORS.lime },
+  tabTextActive: { color: COLORS.accent },
 });

@@ -4,13 +4,14 @@ import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 
 import { ScreenContainer } from "@/components/screen-container";
 import { ThemedView } from "@/components/themed-view";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import { SchemeColors, type ColorScheme } from "@/constants/theme";
+import { COLORS } from "@/constants/theme";
+import type { ColorScheme } from "@/lib/theme-provider";
 import { useColors } from "@/hooks/use-colors";
 import { useThemeContext } from "@/lib/theme-provider";
 
-type PaletteName = keyof typeof SchemeColors.light;
+type PaletteName = keyof typeof COLORS;
 
-const paletteNames: PaletteName[] = Object.keys(SchemeColors.light) as PaletteName[];
+const paletteNames: PaletteName[] = Object.keys(COLORS) as PaletteName[];
 
 function ColorSwatch({ name, value }: { name: PaletteName; value: string }) {
   return (
@@ -34,23 +35,23 @@ export default function ThemeLabScreen() {
     () =>
       paletteNames.map((name) => ({
         name,
-        value: SchemeColors[colorScheme][name],
+        value: COLORS[name],
       })),
-    [colorScheme],
+    [],
   );
 
   const tileStyles = useMemo(() => {
-    const build = (scheme: ColorScheme) => ({
-      background: SchemeColors[scheme].background,
-      border: SchemeColors[scheme].border,
-      text: SchemeColors[scheme].foreground,
-      subText: SchemeColors[scheme].muted,
-      activeBackground: SchemeColors[scheme].primary,
-      activeText: SchemeColors[scheme].background,
+    const build = () => ({
+      background: COLORS.background,
+      border: COLORS.border,
+      text: COLORS.foreground,
+      subText: COLORS.muted,
+      activeBackground: COLORS.accent,
+      activeText: COLORS.background,
     });
     return {
-      light: build("light"),
-      dark: build("dark"),
+      light: build(),
+      dark: build(),
     };
   }, []);
 
@@ -121,7 +122,7 @@ export default function ThemeLabScreen() {
             <View className="mt-4 flex-row flex-wrap gap-2">
               <TouchableOpacity
                 className="rounded-full px-4 py-2"
-                style={{ backgroundColor: SchemeColors[colorScheme].primary }}
+                style={{ backgroundColor: COLORS.accent }}
                 onPress={() => {
                   setPressCount((count) => count + 1);
                   setLastAction("Pressed Primary token");
@@ -131,7 +132,7 @@ export default function ThemeLabScreen() {
               </TouchableOpacity>
               <TouchableOpacity
                 className="rounded-full px-4 py-2 border border-border"
-                style={{ backgroundColor: SchemeColors[colorScheme].surface }}
+                style={{ backgroundColor: COLORS.cardBackground }}
                 onPress={() => {
                   setPressCount((count) => count + 1);
                   setLastAction("Pressed Surface token");
@@ -143,7 +144,7 @@ export default function ThemeLabScreen() {
               </TouchableOpacity>
               <TouchableOpacity
                 className="rounded-full px-4 py-2"
-                style={{ backgroundColor: SchemeColors[colorScheme].success }}
+                style={{ backgroundColor: COLORS.success }}
                 onPress={() => {
                   setPressCount((count) => count + 1);
                   setLastAction("Pressed Success token");
@@ -155,7 +156,7 @@ export default function ThemeLabScreen() {
               </TouchableOpacity>
               <TouchableOpacity
                 className="rounded-full px-4 py-2"
-                style={{ backgroundColor: SchemeColors[colorScheme].warning }}
+                style={{ backgroundColor: COLORS.accent }}
                 onPress={() => {
                   setPressCount((count) => count + 1);
                   setLastAction("Pressed Warning token");
@@ -167,7 +168,7 @@ export default function ThemeLabScreen() {
               </TouchableOpacity>
               <TouchableOpacity
                 className="rounded-full px-4 py-2"
-                style={{ backgroundColor: SchemeColors[colorScheme].error }}
+                style={{ backgroundColor: COLORS.error }}
                 onPress={() => {
                   setPressCount((count) => count + 1);
                   setLastAction("Pressed Error token");

@@ -1,0 +1,52 @@
+{
+  "enumTypes": [
+    "AppRole",
+    "ContentStatus",
+    "AvailabilityStatus",
+    "LeadStatus",
+    "LeadRequestType",
+    "PromoStatus",
+    "SocialPlatform"
+  ],
+  "rowTypes": [
+    "Building",
+    "Layout",
+    "Apartment",
+    "Profile",
+    "UserRole",
+    "PriceHistory",
+    "Favorite",
+    "Promo",
+    "BlogPost",
+    "SocialLink",
+    "ConstructionUpdate",
+    "ConsentVersion",
+    "Lead",
+    "LeadEvent",
+    "LeadTask",
+    "AuditLog"
+  ],
+  "tables": [
+    "buildings",
+    "layouts",
+    "apartments",
+    "profiles",
+    "user_roles",
+    "price_history",
+    "favorites",
+    "promos",
+    "blog_posts",
+    "social_links",
+    "construction_updates",
+    "consent_versions",
+    "leads",
+    "lead_events",
+    "lead_tasks",
+    "audit_log"
+  ],
+  "functions": [
+    "submit_lead",
+    "has_role"
+  ],
+  "castNever": false
+}

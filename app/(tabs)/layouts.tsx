@@ -2,7 +2,8 @@ import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { COLORS, DEMO_NOTICE, layoutItems } from "@/constants/app-data";
+import { COLORS } from "@/constants/theme";
+import { DEMO_NOTICE, layoutItems } from "@/constants/mock-data";
 import { Eyebrow, IconButton, PrimaryButton, SectionHeading, Tag } from "@/components/app-ui";
 import { ScreenContainer } from "@/components/screen-container";
 import { track } from "@/lib/telemetry";
@@ -20,7 +21,7 @@ export default function LayoutsScreen() {
     <ScreenContainer safeAreaClassName="bg-background" className="px-5">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         <View style={styles.header}>
-          <View><Eyebrow color={COLORS.lime}>Каталог / выбор</Eyebrow><Text style={styles.title}>Планировки</Text></View>
+          <View><Eyebrow color={COLORS.accent}>Каталог / выбор</Eyebrow><Text style={styles.title}>Планировки</Text></View>
           <IconButton icon="options-outline" label="Фильтры" onPress={() => setActiveFilter("Все")} />
         </View>
         <Text style={styles.intro}>Соберите свой сценарий жизни — детали по площадям, ценам и наличию подтвердит менеджер.</Text>
@@ -32,7 +33,7 @@ export default function LayoutsScreen() {
         <View style={styles.list}>
           {visible.map((item, index) => (
             <Pressable key={item.id} style={({ pressed }) => [styles.card, pressed && styles.pressed]} onPress={() => router.push({ pathname: "/lead", params: { type: "layout", item: item.title } })}>
-              <View style={[styles.planPreview, { backgroundColor: item.tone === "lime" ? COLORS.lime : item.tone === "sand" ? COLORS.sand : COLORS.amber }]}>
+              <View style={[styles.planPreview, { backgroundColor: item.tone === "lime" ? COLORS.accent : item.tone === "sand" ? COLORS.foreground : COLORS.accent }]}>
                 <View style={styles.planFrame}><View style={styles.planRoomA} /><View style={styles.planRoomB} /><View style={styles.planRoomC} /></View>
                 <Text style={styles.planNumber}>0{index + 1}</Text>
               </View>
@@ -53,21 +54,21 @@ export default function LayoutsScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { paddingTop: 13, paddingBottom: 35, gap: 18 },
+  content: { paddingTop: 13, paddingBottom: 130, gap: 18 },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   title: { color: COLORS.foreground, fontSize: 32, lineHeight: 36, fontWeight: "800", letterSpacing: -1, marginTop: 6 },
   intro: { color: COLORS.muted, fontSize: 14, lineHeight: 20, maxWidth: 320 },
   filterRow: { flexDirection: "row", gap: 8, flexWrap: "wrap" },
-  filter: { paddingHorizontal: 13, paddingVertical: 10, borderRadius: 12, backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.border },
-  filterActive: { backgroundColor: COLORS.lime, borderColor: COLORS.lime },
+  filter: { paddingHorizontal: 13, paddingVertical: 10, borderRadius: 12, backgroundColor: COLORS.cardBackground, borderWidth: 1, borderColor: COLORS.border },
+  filterActive: { backgroundColor: COLORS.accent, borderColor: COLORS.accent },
   filterText: { color: COLORS.muted, fontSize: 12, fontWeight: "700" },
   filterTextActive: { color: COLORS.background },
-  notice: { flexDirection: "row", gap: 9, alignItems: "center", padding: 11, borderRadius: 14, backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.border },
-  noticeMark: { width: 20, height: 20, borderRadius: 10, backgroundColor: COLORS.lime, alignItems: "center", justifyContent: "center" },
+  notice: { flexDirection: "row", gap: 9, alignItems: "center", padding: 11, borderRadius: 14, backgroundColor: COLORS.cardBackground, borderWidth: 1, borderColor: COLORS.border },
+  noticeMark: { width: 20, height: 20, borderRadius: 10, backgroundColor: COLORS.accent, alignItems: "center", justifyContent: "center" },
   noticeMarkText: { color: COLORS.background, fontSize: 13, fontWeight: "900" },
   noticeText: { color: COLORS.muted, fontSize: 11, lineHeight: 15, flex: 1 },
   list: { gap: 12 },
-  card: { backgroundColor: COLORS.surface, borderRadius: 22, overflow: "hidden", borderWidth: 1, borderColor: COLORS.border },
+  card: { backgroundColor: COLORS.cardBackground, borderRadius: 22, overflow: "hidden", borderWidth: 1, borderColor: COLORS.border },
   planPreview: { height: 142, position: "relative", overflow: "hidden", padding: 15 },
   planFrame: { position: "absolute", width: 160, height: 104, right: 24, top: 18, borderWidth: 2, borderColor: COLORS.background + "66", transform: [{ rotate: "-5deg" }] },
   planRoomA: { position: "absolute", left: 0, top: 0, width: 54, height: 50, borderRightWidth: 2, borderBottomWidth: 2, borderColor: COLORS.background + "66" },
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
   cardMeta: { color: COLORS.muted, fontSize: 12, marginBottom: 8 },
   cardFeature: { color: COLORS.muted, fontSize: 13, lineHeight: 18 },
   cardAction: { marginTop: 15, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  cardActionText: { color: COLORS.lime, fontSize: 13, fontWeight: "800" },
-  arrow: { color: COLORS.lime, fontSize: 18 },
+  cardActionText: { color: COLORS.accent, fontSize: 13, fontWeight: "800" },
+  arrow: { color: COLORS.accent, fontSize: 18 },
   pressed: { opacity: 0.78 },
 });

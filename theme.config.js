@@ -1,14 +1,21 @@
-/** @type {const} */
-const themeColors = {
-  primary: { light: '#B88F00', dark: '#B88F00' },
-  background: { light: '#484848', dark: '#484848' },
-  surface: { light: '#484848', dark: '#484848' },
-  foreground: { light: '#EDEAE4', dark: '#EDEAE4' },
-  muted: { light: '#8A8887', dark: '#8A8887' },
-  border: { light: '#8A8887', dark: '#8A8887' },
-  success: { light: '#B88F00', dark: '#B88F00' },
-  warning: { light: '#B88F00', dark: '#B88F00' },
-  error: { light: '#B88F00', dark: '#B88F00' },
+// Node-side adapter for Tailwind; actual values live only in constants/app-data.ts.
+require("tsx/cjs");
+const { COLORS } = require("./constants/theme.ts");
+
+const palette = {
+  primary: COLORS.accent,
+  background: COLORS.background,
+  surface: COLORS.cardBackground,
+  foreground: COLORS.foreground,
+  muted: COLORS.muted,
+  border: COLORS.border,
+  success: COLORS.success,
+  warning: COLORS.accent,
+  error: COLORS.error,
 };
+
+const themeColors = Object.fromEntries(
+  Object.entries(palette).map(([name, value]) => [name, { light: value, dark: value }]),
+);
 
 module.exports = { themeColors };

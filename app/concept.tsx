@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
-import { COLORS } from "@/constants/app-data";
+import { COLORS } from "@/constants/theme";
 import { Eyebrow, PrimaryButton, Tag } from "@/components/app-ui";
 import { track } from "@/lib/telemetry";
 
@@ -24,9 +24,9 @@ export default function ConceptScreen() {
           <View style={styles.heroCopy}><Tag tone="lime">Визуализация проекта</Tag><Text style={styles.title}>Дом, который{`\n`}открывает горизонт.</Text><Text style={styles.subtitle}>Архитектура, двор и пространство для новых планов.</Text></View>
         </ImageBackground>
         <View style={styles.panel}>
-          <View style={styles.panelHeading}><View><Eyebrow color={COLORS.lime}>Концепт приложения</Eyebrow><Text style={styles.panelTitle}>Смотреть проект</Text></View><View style={styles.goldMark}><Text style={styles.goldMarkText}>УГ</Text></View></View>
+          <View style={styles.panelHeading}><View><Eyebrow color={COLORS.accent}>Концепт приложения</Eyebrow><Text style={styles.panelTitle}>Смотреть проект</Text></View><View style={styles.goldMark}><Text style={styles.goldMarkText}>УГ</Text></View></View>
           <Text style={styles.body}>Визуализация помогает почувствовать масштаб будущего проекта. В следующем шаге сюда можно добавить подтверждённые планировки, цены и ход строительства.</Text>
-          <View style={styles.chips}><View style={styles.chip}><Ionicons name="business-outline" size={16} color={COLORS.lime} /><Text style={styles.chipText}>Архитектура</Text></View><View style={styles.chip}><Ionicons name="leaf-outline" size={16} color={COLORS.lime} /><Text style={styles.chipText}>Двор и сад</Text></View></View>
+          <View style={styles.chips}><View style={styles.chip}><Ionicons name="business-outline" size={16} color={COLORS.accent} /><Text style={styles.chipText}>Архитектура</Text></View><View style={styles.chip}><Ionicons name="leaf-outline" size={16} color={COLORS.accent} /><Text style={styles.chipText}>Двор и сад</Text></View></View>
           <PrimaryButton label="Подобрать планировку" onPress={() => router.push("/layouts")} />
           <Text style={styles.note}>Изображение — визуализация. Фактические характеристики проекта уточняются командой.</Text>
         </View>
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   panel: { backgroundColor: COLORS.background, borderTopLeftRadius: 28, borderTopRightRadius: 28, marginTop: -28, padding: 21, paddingBottom: 30 },
   panelHeading: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 },
   panelTitle: { color: COLORS.foreground, fontSize: 27, lineHeight: 31, fontWeight: "800", marginTop: 5 },
-  goldMark: { width: 44, height: 44, borderRadius: 15, backgroundColor: COLORS.lime, alignItems: "center", justifyContent: "center" },
+  goldMark: { width: 44, height: 44, borderRadius: 15, backgroundColor: COLORS.accent, alignItems: "center", justifyContent: "center" },
   goldMarkText: { color: COLORS.background, fontSize: 15, fontWeight: "900", letterSpacing: 1 },
   body: { color: COLORS.muted, fontSize: 14, lineHeight: 20, marginBottom: 16 },
   chips: { flexDirection: "row", gap: 9, marginBottom: 18 },

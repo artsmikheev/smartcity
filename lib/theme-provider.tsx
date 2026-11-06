@@ -1,19 +1,33 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Appearance, View, useColorScheme as useSystemColorScheme } from "react-native";
+import { Appearance, View } from "react-native";
 import { colorScheme as nativewindColorScheme, vars } from "nativewind";
 
-import { SchemeColors, type ColorScheme } from "@/constants/theme";
+import { COLORS } from "@/constants/theme";
+
+export type ColorScheme = "light" | "dark";
 
 type ThemeContextValue = {
   colorScheme: ColorScheme;
   setColorScheme: (scheme: ColorScheme) => void;
 };
 
+// NativeWind's semantic names map to the same tokens, never a second palette.
+const nativewindPalette = {
+  primary: COLORS.accent,
+  background: COLORS.background,
+  surface: COLORS.cardBackground,
+  foreground: COLORS.foreground,
+  muted: COLORS.muted,
+  border: COLORS.border,
+  success: COLORS.success,
+  warning: COLORS.accent,
+  error: COLORS.error,
+};
+
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const systemScheme = useSystemColorScheme() === "dark" ? "dark" : "light";
-  const [colorScheme, setColorSchemeState] = useState<ColorScheme>(systemScheme);
+  const [colorScheme, setColorSchemeState] = useState<ColorScheme>("dark");
 
   const applyScheme = useCallback((scheme: ColorScheme) => {
     nativewindColorScheme.set(scheme);
@@ -22,8 +36,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const root = document.documentElement;
       root.dataset.theme = scheme;
       root.classList.toggle("dark", scheme === "dark");
-      const palette = SchemeColors[scheme];
-      Object.entries(palette).forEach(([token, value]) => {
+      Object.entries(nativewindPalette).forEach(([token, value]) => {
         root.style.setProperty(`--color-${token}`, value);
       });
     }
@@ -39,40 +52,23 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [applyScheme, colorScheme]);
 
   const themeVariables = useMemo(
-    () =>
-      vars({
-        "color-primary": SchemeColors[colorScheme].primary,
-        "color-background": SchemeColors[colorScheme].background,
-        "color-surface": SchemeColors[colorScheme].surface,
-        "color-foreground": SchemeColors[colorScheme].foreground,
-        "color-muted": SchemeColors[colorScheme].muted,
-        "color-border": SchemeColors[colorScheme].border,
-        "color-success": SchemeColors[colorScheme].success,
-        "color-warning": SchemeColors[colorScheme].warning,
-        "color-error": SchemeColors[colorScheme].error,
-      }),
-    [colorScheme],
+    () => vars(Object.fromEntries(
+      Object.entries(nativewindPalette).map(([name, value]) => [`color-${name}`, value]),
+    )),
+    [],
   );
 
-  const value = useMemo(
-    () => ({
-      colorScheme,
-      setColorScheme,
-    }),
-    [colorScheme, setColorScheme],
-  );
+  const value = useMemo(() => ({ colorScheme, setColorScheme }), [colorScheme, setColorScheme]);
 
   return (
     <ThemeContext.Provider value={value}>
-      <View style={[{ flex: 1 }, themeVariables]}>{children}</View>
+      <View style={[{ flex: 1, backgroundColor: COLORS.background }, themeVariables]}>{children}</View>
     </ThemeContext.Provider>
   );
 }
 
 export function useThemeContext(): ThemeContextValue {
   const ctx = useContext(ThemeContext);
-  if (!ctx) {
-    throw new Error("useThemeContext must be used within ThemeProvider");
-  }
+  if (!ctx) throw new Error("useThemeContext must be used within ThemeProvider");
   return ctx;
 }

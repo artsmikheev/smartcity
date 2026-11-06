@@ -3,7 +3,7 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
-import { COLORS } from "@/constants/app-data";
+import { COLORS } from "@/constants/theme";
 import { PrimaryButton, Tag } from "@/components/app-ui";
 import { ScreenContainer } from "@/components/screen-container";
 import { track } from "@/lib/telemetry";
@@ -90,32 +90,32 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   content: { paddingTop: 12, paddingBottom: 28, gap: 20 },
   topRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  back: { width: 38, height: 38, borderRadius: 14, backgroundColor: COLORS.surfaceRaised, alignItems: "center", justifyContent: "center" },
+  back: { width: 38, height: 38, borderRadius: 14, backgroundColor: COLORS.cardBackground, alignItems: "center", justifyContent: "center" },
   backGlyph: { color: COLORS.foreground, fontSize: 24, lineHeight: 24, fontWeight: "400", marginTop: -4 },
   title: { color: COLORS.foreground, fontSize: 31, lineHeight: 34, fontWeight: "800", letterSpacing: -1 },
   copy: { color: COLORS.muted, fontSize: 14, lineHeight: 20, maxWidth: 330 },
   form: { gap: 16 },
   fieldLabel: { color: COLORS.muted, fontSize: 11, fontWeight: "700", marginBottom: 8, textTransform: "uppercase", letterSpacing: 0.8 },
-  input: { minHeight: 52, borderRadius: 16, borderWidth: 1, borderColor: COLORS.border, backgroundColor: COLORS.surface, color: COLORS.foreground, paddingHorizontal: 15, fontSize: 14 },
+  input: { minHeight: 52, borderRadius: 16, borderWidth: 1, borderColor: COLORS.border, backgroundColor: COLORS.cardBackground, color: COLORS.foreground, paddingHorizontal: 15, fontSize: 14 },
   inputMultiline: { minHeight: 92, paddingTop: 14, textAlignVertical: "top" },
   channelRow: { flexDirection: "row", gap: 8 },
-  channel: { flex: 1, minHeight: 44, borderRadius: 14, borderWidth: 1, borderColor: COLORS.border, alignItems: "center", justifyContent: "center", backgroundColor: COLORS.surface },
-  channelActive: { borderColor: COLORS.lime, backgroundColor: COLORS.lime },
+  channel: { flex: 1, minHeight: 44, borderRadius: 14, borderWidth: 1, borderColor: COLORS.border, alignItems: "center", justifyContent: "center", backgroundColor: COLORS.cardBackground },
+  channelActive: { borderColor: COLORS.accent, backgroundColor: COLORS.accent },
   channelText: { color: COLORS.muted, fontSize: 12, fontWeight: "700" },
   channelTextActive: { color: COLORS.background },
   consentRow: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
   checkbox: { width: 22, height: 22, borderRadius: 7, borderWidth: 1, borderColor: COLORS.mutedDark, alignItems: "center", justifyContent: "center" },
-  checkboxActive: { backgroundColor: COLORS.lime, borderColor: COLORS.lime },
+  checkboxActive: { backgroundColor: COLORS.accent, borderColor: COLORS.accent },
   consentText: { color: COLORS.muted, fontSize: 11, lineHeight: 16, flex: 1 },
-  error: { color: COLORS.coral, fontSize: 12, lineHeight: 17 },
+  error: { color: COLORS.error, fontSize: 12, lineHeight: 17 },
   formHint: { color: COLORS.mutedDark, fontSize: 10, lineHeight: 14, textAlign: "center" },
   successWrap: { flex: 1, justifyContent: "center", gap: 17 },
-  successMark: { width: 68, height: 68, borderRadius: 24, backgroundColor: COLORS.lime, alignItems: "center", justifyContent: "center", marginBottom: 4 },
+  successMark: { width: 68, height: 68, borderRadius: 24, backgroundColor: COLORS.accent, alignItems: "center", justifyContent: "center", marginBottom: 4 },
   successTitle: { color: COLORS.foreground, fontSize: 30, lineHeight: 34, fontWeight: "800", letterSpacing: -0.9 },
   successCopy: { color: COLORS.muted, fontSize: 14, lineHeight: 21 },
-  idCard: { backgroundColor: COLORS.surface, borderRadius: 17, borderWidth: 1, borderColor: COLORS.border, padding: 15, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  idCard: { backgroundColor: COLORS.cardBackground, borderRadius: 17, borderWidth: 1, borderColor: COLORS.border, padding: 15, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   idLabel: { color: COLORS.muted, fontSize: 10, letterSpacing: 1.3, fontWeight: "800" },
-  idValue: { color: COLORS.lime, fontSize: 17, fontWeight: "800", letterSpacing: 1 },
+  idValue: { color: COLORS.accent, fontSize: 17, fontWeight: "800", letterSpacing: 1 },
   closeLink: { alignItems: "center", paddingVertical: 6 },
   closeLinkText: { color: COLORS.muted, fontSize: 13, fontWeight: "700" },
 });

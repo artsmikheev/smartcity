@@ -1,36 +1,74 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { Platform, StyleSheet } from "react-native";
+import type { ComponentProps } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { COLORS } from "@/constants/app-data";
-import { HapticTab } from "@/components/haptic-tab";
+import { COLORS, RADIUS, SPACING } from "@/constants/theme";
 
-const icons = {
-  index: ["home-outline", "home"] as const,
-  layouts: ["grid-outline", "grid"] as const,
-  construction: ["analytics-outline", "analytics"] as const,
-  profile: ["person-outline", "person"] as const,
-};
+type TabBarProps = Parameters<NonNullable<ComponentProps<typeof Tabs>["tabBar"]>>[0];
 
-export default function TabLayout() {
+// Recovery R1.2: keep construction until the favorites screen is restored.
+const tabItems = [
+  { name: "index", label: "Главная", icon: "home-outline", activeIcon: "home" },
+  { name: "layouts", label: "Планировки", icon: "grid-outline", activeIcon: "grid" },
+  { name: "construction", label: "Стройка", icon: "analytics-outline", activeIcon: "analytics" },
+  { name: "profile", label: "Профиль", icon: "person-outline", activeIcon: "person" },
+] as const;
+
+function FloatingTabBar({ state, navigation }: TabBarProps) {
   const insets = useSafeAreaInsets();
-  const bottomPadding = Platform.OS === "web" ? 10 : Math.max(insets.bottom, 8);
 
   return (
-    <Tabs
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarActiveTintColor: COLORS.lime,
-        tabBarInactiveTintColor: COLORS.mutedDark,
-        tabBarLabelStyle: styles.tabLabel,
-        tabBarStyle: [styles.tabBar, { paddingBottom: bottomPadding, height: 62 + bottomPadding }],
-        tabBarIcon: ({ color, focused }) => {
-          const iconSet = icons[route.name as keyof typeof icons] ?? icons.index;
-          return <Ionicons name={iconSet[focused ? 1 : 0]} size={21} color={color} />;
-        },
+    <View
+      testID="floating-tab-bar"
+      accessibilityRole="tablist"
+      accessibilityLabel="Основная навигация"
+      style={[styles.pill, { bottom: SPACING.xl + insets.bottom }]}
+    >
+      {tabItems.map((item) => {
+        const route = state.routes.find((candidate) => candidate.name === item.name);
+        if (!route) return null;
+        const focused = state.routes[state.index].key === route.key;
+
+        const onPress = () => {
+          const event = navigation.emit({ type: "tabPress", target: route.key, canPreventDefault: true });
+          if (!focused && !event.defaultPrevented) navigation.navigate(route.name, route.params);
+        };
+
+        return (
+          <Pressable
+            key={route.key}
+            testID={`tab-${item.name}`}
+            accessibilityRole="tab"
+            accessibilityLabel={item.label}
+            accessibilityState={{ selected: focused }}
+            aria-selected={focused}
+            onPress={onPress}
+            onLongPress={() => navigation.emit({ type: "tabLongPress", target: route.key })}
+            style={({ pressed }) => [styles.tab, pressed && styles.pressed]}
+          >
+            <View style={[styles.iconCircle, focused && styles.activeCircle]}>
+              <Ionicons
+                name={focused ? item.activeIcon : item.icon}
+                size={focused ? 20 : 22}
+                color={focused ? COLORS.accentForeground : COLORS.muted}
+                accessible={false}
+              />
+            </View>
+            <Text style={[styles.label, focused && styles.activeLabel]}>{item.label}</Text>
+          </Pressable>
+        );
       })}
+    </View>
+  );
+}
+
+export default function TabLayout() {
+  return (
+    <Tabs
+      tabBar={(props) => <FloatingTabBar {...props} />}
+      screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: COLORS.background } }}
     >
       <Tabs.Screen name="index" options={{ title: "Главная" }} />
       <Tabs.Screen name="layouts" options={{ title: "Планировки" }} />
@@ -41,6 +79,29 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-  tabBar: { backgroundColor: COLORS.background, borderTopColor: COLORS.border, borderTopWidth: 1, paddingTop: 8 },
-  tabLabel: { fontSize: 10, fontWeight: "700" },
+  pill: {
+    position: "absolute",
+    left: SPACING.xl,
+    right: SPACING.xl,
+    height: 64,
+    borderRadius: RADIUS.tab,
+    borderCurve: "continuous",
+    backgroundColor: "rgba(28,27,26,0.95)",
+    flexDirection: "row",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
+  },
+  tab: {
+    flex: 1,
+    minWidth: 48,
+    height: 64,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 2,
+    borderRadius: RADIUS.tab,
+  },
+  iconCircle: { width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center" },
+  activeCircle: { backgroundColor: COLORS.accent },
+  label: { color: COLORS.muted, fontSize: 10, lineHeight: 12 },
+  activeLabel: { color: COLORS.foreground },
+  pressed: { opacity: 0.8 },
 });

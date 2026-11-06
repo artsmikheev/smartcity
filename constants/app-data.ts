@@ -1,92 +1,30 @@
 export const COLORS = {
-  background: "#484848",
-  surface: "#484848",
-  surfaceRaised: "rgba(237, 234, 228, 0.10)",
+  background: "#1C1B1A",
+  cardBackground: "#262422",
+  cardDeep: "#121212",
   foreground: "#EDEAE4",
-  muted: "#8A8887",
+  muted: "#BCB9B7",
   mutedDark: "#8A8887",
-  border: "#8A8887",
-  lime: "#B88F00",
-  sand: "#EDEAE4",
-  amber: "#B88F00",
-  coral: "#B88F00",
+  accent: "#B88F00",
+  accentForeground: "#1A1A1A",
+  border: "#9A9896",
+  error: "#F37A72",
+  success: "#4ADE80",
 };
 
-export const DEMO_NOTICE = "Демонстрационный экран — цифры и условия уточняет команда проекта.";
+export const TYPOGRAPHY = {
+  display36: { fontFamily: "PlayfairDisplay_400Regular", fontSize: 36, lineHeight: 40, letterSpacing: -0.5 },
+  display32: { fontFamily: "PlayfairDisplay_400Regular", fontSize: 32, lineHeight: 37, letterSpacing: -0.3 },
+  display22: { fontFamily: "PlayfairDisplay_400Regular", fontSize: 22, lineHeight: 26 },
+  cardTitle: { fontFamily: "PlayfairDisplay_400Regular", fontSize: 20, lineHeight: 25 },
+  body15: { fontFamily: undefined, fontSize: 15, lineHeight: 22 },
+  body13: { fontFamily: undefined, fontSize: 13, lineHeight: 18 },
+  meta11: { fontFamily: undefined, fontSize: 11, lineHeight: 14, letterSpacing: 0.5, textTransform: "uppercase" },
+  priceCard: { fontFamily: undefined, fontSize: 22, lineHeight: 26, fontWeight: "700" },
+  priceDetail: { fontFamily: undefined, fontSize: 34, lineHeight: 37, fontWeight: "700" },
+  buttonLabel: { fontFamily: undefined, fontSize: 15, lineHeight: 15, fontWeight: "600" },
+} as const;
 
-export type LayoutItem = {
-  id: string;
-  rooms: string;
-  title: string;
-  area: string;
-  floor: string;
-  feature: string;
-  status: "На проверке" | "Запросить условия";
-  tone: "lime" | "sand" | "amber";
-};
+export const SPACING = { xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, huge: 40, max: 48 } as const;
 
-export const layoutItems: LayoutItem[] = [
-  {
-    id: "layout-a",
-    rooms: "1-комн.",
-    title: "Компактный ритм",
-    area: "Площадь — уточняется",
-    floor: "Этаж — выбрать",
-    feature: "Светлая логика планировки",
-    status: "На проверке",
-    tone: "lime",
-  },
-  {
-    id: "layout-b",
-    rooms: "2-комн.",
-    title: "Для новых планов",
-    area: "Площадь — уточняется",
-    floor: "Этаж — выбрать",
-    feature: "Сценарий для семьи",
-    status: "Запросить условия",
-    tone: "sand",
-  },
-  {
-    id: "layout-c",
-    rooms: "3-комн.",
-    title: "Свободный масштаб",
-    area: "Площадь — уточняется",
-    floor: "Этаж — выбрать",
-    feature: "Больше воздуха для идей",
-    status: "На проверке",
-    tone: "amber",
-  },
-];
-
-export const constructionUpdates = [
-  {
-    id: "update-1",
-    label: "Сейчас",
-    title: "Контур проекта",
-    copy: "Публикации о ходе строительства появятся после проверки материалов.",
-    date: "Дата обновления уточняется",
-    tone: "lime" as const,
-  },
-  {
-    id: "update-2",
-    label: "Следом",
-    title: "Фото и видео",
-    copy: "Лента будет собираться по корпусам, этапам и датам съёмки.",
-    date: "Источник — команда проекта",
-    tone: "sand" as const,
-  },
-  {
-    id: "update-3",
-    label: "Дальше",
-    title: "Ваши уведомления",
-    copy: "Авторизованные клиенты смогут получать новые статусы проекта.",
-    date: "Push — следующий этап",
-    tone: "amber" as const,
-  },
-];
-
-export const faqs = [
-  { question: "Как получить планировку?", answer: "Выберите вариант и оставьте заявку — команда проекта отправит подтверждённые материалы." },
-  { question: "Что значит «забронировать»?", answer: "В приложении это заявка на связь и подбор. Это не юридическое бронирование и не гарантия наличия." },
-  { question: "Где уточнить цену и условия?", answer: "Оставьте номер и удобный канал связи. Актуальные условия подтверждает менеджер." },
-];
+export const RADIUS = { card: 20, image: 12, primary: 999, secondary: 12, tab: 32, sheet: 24, pill: 999 } as const;

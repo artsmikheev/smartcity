@@ -1,0 +1,72 @@
+{
+  "geometry": {
+    "x": 20,
+    "y": 728,
+    "width": 335,
+    "height": 64,
+    "bottomGap": 20,
+    "radius": "32px",
+    "background": "rgba(28, 27, 26, 0.95)",
+    "shadow": "rgba(0, 0, 0, 0.4) 0px 8px 24px 0px",
+    "tabs": [
+      {
+        "label": "Главная",
+        "selected": "false",
+        "width": 83.75,
+        "height": 64
+      },
+      {
+        "label": "Планировки",
+        "selected": "true",
+        "width": 83.75,
+        "height": 64
+      },
+      {
+        "label": "Стройка",
+        "selected": "false",
+        "width": 83.75,
+        "height": 64
+      },
+      {
+        "label": "Профиль",
+        "selected": "false",
+        "width": 83.75,
+        "height": 64
+      }
+    ],
+    "loadedFonts": [
+      {
+        "family": "PlayfairDisplay_400Regular",
+        "status": "loaded"
+      },
+      {
+        "family": "ionicons",
+        "status": "loaded"
+      }
+    ]
+  },
+  "navigationChecks": [
+    {
+      "label": "Главная",
+      "route": "/",
+      "passed": true
+    },
+    {
+      "label": "Стройка",
+      "route": "/construction",
+      "passed": true
+    },
+    {
+      "label": "Профиль",
+      "route": "/profile",
+      "passed": true
+    },
+    {
+      "label": "Планировки",
+      "route": "/layouts",
+      "passed": true
+    }
+  ],
+  "keyboardActivation": "PASS",
+  "pageErrors": []
+}
