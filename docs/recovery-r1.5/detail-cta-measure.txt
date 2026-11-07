@@ -1,0 +1,15 @@
+{
+  "visible": [
+    "detail-sticky-cta"
+  ],
+  "sticky": {
+    "x": 0,
+    "y": 708,
+    "width": 375,
+    "height": 104,
+    "top": 708,
+    "right": 375,
+    "bottom": 812,
+    "left": 0
+  }
+}

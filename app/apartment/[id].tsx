@@ -65,7 +65,7 @@ export default function ApartmentScreen() {
           <Text selectable testID="detail-price" style={styles.price}>{apartmentPrice(apartment.price)}</Text>
           <Text testID="detail-status" style={styles.status}>{statuses[apartment.availability_status]}</Text>
           {apartment.is_demo && <Text style={styles.disclaimer}>Схематичная планировка и демо-данные. Цена и наличие не являются предложением.</Text>}
-          <View style={{ marginTop: SPACING.lg }}>{cta('detail-primary-cta')}</View>
+          <View style={{ height: SPACING.xxxl }} />
           <View style={styles.section}>
             <Text accessibilityRole="header" style={styles.sectionTitle}>О квартире</Text>
             <View style={styles.facts}>{[{ label: 'ПЛОЩАДЬ', value: `${apartment.area} м²` }, { label: 'ЭТАЖ', value: String(apartment.floor) }, { label: 'КОРПУС', value: building }, { label: 'ОТДЕЛКА', value: 'По запросу' }].map((fact) => <View key={fact.label} style={styles.fact}><Text style={styles.meta}>{fact.label}</Text><Text style={styles.factValue}>{fact.value}</Text></View>)}</View>
