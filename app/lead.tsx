@@ -9,7 +9,7 @@ import { ActivityIndicator, KeyboardAvoidingView, Modal, Platform, Pressable, Sc
 
 import { LeadButton, LeadChannels, LeadConsentField, LeadField } from '@/components/lead-fields';
 import { ScreenContainer } from '@/components/screen-container';
-import { COLORS, RADIUS, TYPOGRAPHY } from '@/constants/theme';
+import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '@/constants/theme';
 import { supabaseConfigured } from '@/lib/api/catalog';
 import { clearAcceptedLeadReference, fetchPublishedLeadConsent, submitLead } from '@/lib/api/leads';
 import { firstLeadParam, formatRuPhone, isDemoConsent, leadFormSchema, leadHeading, toLeadServiceError, type LeadFormInput, type LeadFormValues } from '@/lib/lead-model';
@@ -206,15 +206,15 @@ const styles = StyleSheet.create({
   kicker: { ...TYPOGRAPHY.meta11, color: COLORS.muted, fontWeight: '500' },
   closeHit: { width: 48, height: 48, alignItems: 'center', justifyContent: 'center' },
   closeCircle: { width: 44, height: 44, borderRadius: 22, backgroundColor: COLORS.cardBackground, alignItems: 'center', justifyContent: 'center' },
-  title: { fontFamily: 'PlayfairDisplay_400Regular', color: COLORS.foreground, fontSize: 28, lineHeight: 34 },
+  title: { ...TYPOGRAPHY.display32, color: COLORS.foreground },
   copy: { ...TYPOGRAPHY.body15, color: COLORS.muted, marginTop: 8 },
   form: { marginTop: 24, gap: 16 },
   errorBox: { padding: 12, borderRadius: RADIUS.secondary, borderWidth: 1, borderColor: COLORS.error, backgroundColor: COLORS.cardBackground, flexDirection: 'row', gap: 8, alignItems: 'flex-start' },
-  errorText: { color: COLORS.error, fontSize: 11, lineHeight: 16, flex: 1 },
-  status: { color: COLORS.muted, fontSize: 11, lineHeight: 16 },
+  errorText: { ...TYPOGRAPHY.body13, color: COLORS.error, flex: 1 },
+  status: { ...TYPOGRAPHY.body13, color: COLORS.muted },
   submitWrap: { marginTop: 8, gap: 12 },
   pressed: { opacity: 0.7 },
-  modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.65)', justifyContent: 'center', padding: 20 },
+  modalBackdrop: { flex: 1, backgroundColor: COLORS.scrim, justifyContent: 'center', padding: SPACING.xl },
   modalCard: { backgroundColor: COLORS.cardBackground, borderRadius: RADIUS.sheet, borderCurve: 'continuous', padding: 20, maxHeight: '90%', gap: 16 },
   modalHeader: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   modalTitle: { ...TYPOGRAPHY.display22, color: COLORS.foreground, flex: 1 },

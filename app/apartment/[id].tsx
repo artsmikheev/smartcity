@@ -99,8 +99,8 @@ const styles = StyleSheet.create({
   heroToolbar: { position: 'absolute', left: 18, right: 18, flexDirection: 'row', justifyContent: 'space-between' },
   toolbarRight: { flexDirection: 'row', gap: SPACING.sm },
   iconHit: { width: 48, height: 48, padding: 2 },
-  iconCircle: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(28,27,26,0.7)', alignItems: 'center', justifyContent: 'center' },
-  heroHeartCircle: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(28,27,26,0.85)', alignItems: 'center', justifyContent: 'center' },
+  iconCircle: { width: 44, height: 44, borderRadius: 22, backgroundColor: COLORS.overlay, alignItems: 'center', justifyContent: 'center' },
+  heroHeartCircle: { width: 44, height: 44, borderRadius: 22, backgroundColor: COLORS.overlayStrong, alignItems: 'center', justifyContent: 'center' },
   heroText: { position: 'absolute', bottom: SPACING.xl, left: SPACING.xl, right: SPACING.xl, gap: SPACING.sm },
   meta: { ...TYPOGRAPHY.meta11, color: COLORS.muted },
   heroTitle: { ...TYPOGRAPHY.display32, color: COLORS.foreground },
@@ -123,6 +123,6 @@ const styles = StyleSheet.create({
   sticky: { position: 'absolute', bottom: 0, left: 0, right: 0, paddingTop: SPACING.xxxl, paddingHorizontal: SPACING.xl },
   pressed: { opacity: 0.85 },
   modal: { flex: 1, justifyContent: 'flex-end' },
-  backdrop: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: 'rgba(0,0,0,0.5)' },
+  backdrop: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: COLORS.scrim },
   menu: { backgroundColor: COLORS.cardBackground, borderTopLeftRadius: RADIUS.sheet, borderTopRightRadius: RADIUS.sheet, padding: SPACING.xxl, gap: SPACING.lg },
 });

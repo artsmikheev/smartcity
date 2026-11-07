@@ -1,0 +1,140 @@
+{
+  "geometryCatalog": {
+    "apartment-card-demo-k1-204": {
+      "x": 20,
+      "y": 296,
+      "width": 335,
+      "height": 160,
+      "fontSize": "16px",
+      "shadow": "rgba(0, 0, 0, 0.55) 0px 10px 24px 0px",
+      "border": "0px solid rgb(0, 0, 0)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "padding": "0px",
+      "overflow": "visible"
+    },
+    "card-clip-demo-k1-204": {
+      "x": 20,
+      "y": 296,
+      "width": 335,
+      "height": 160,
+      "fontSize": "16px",
+      "shadow": "none",
+      "border": "0px solid rgb(0, 0, 0)",
+      "bg": "rgb(38, 36, 34)",
+      "padding": "16px",
+      "overflow": "hidden"
+    },
+    "card-heart-demo-k1-204": {
+      "x": 295,
+      "y": 308,
+      "width": 48,
+      "height": 48,
+      "fontSize": "16px",
+      "shadow": "none",
+      "border": "0px solid rgb(0, 0, 0)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "padding": "2px",
+      "overflow": "visible"
+    },
+    "card-heart-circle-demo-k1-204": {
+      "x": 297,
+      "y": 310,
+      "width": 44,
+      "height": 44,
+      "fontSize": "16px",
+      "shadow": "none",
+      "border": "1px solid rgba(255, 255, 255, 0.15)",
+      "bg": "rgba(28, 27, 26, 0.85)",
+      "padding": "0px",
+      "overflow": "visible"
+    },
+    "card-title-demo-k1-204": {
+      "x": 36,
+      "y": 312,
+      "width": 160.046875,
+      "height": 50,
+      "fontSize": "20px",
+      "shadow": "none",
+      "border": "0px solid rgb(0, 0, 0)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "padding": "0px",
+      "overflow": "clip"
+    },
+    "card-price-demo-k1-204": {
+      "x": 36,
+      "y": 414,
+      "width": 160.046875,
+      "height": 26,
+      "fontSize": "22px",
+      "shadow": "none",
+      "border": "0px solid rgb(0, 0, 0)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "padding": "0px",
+      "overflow": "hidden"
+    },
+    "card-media-demo-k1-204": {
+      "x": 211,
+      "y": 312,
+      "width": 128,
+      "height": 128,
+      "fontSize": "16px",
+      "shadow": "none",
+      "border": "0px solid rgb(0, 0, 0)",
+      "bg": "rgb(18, 18, 18)",
+      "padding": "0px",
+      "overflow": "hidden"
+    },
+    "floating-tab-bar": {
+      "x": 20,
+      "y": 728,
+      "width": 335,
+      "height": 64,
+      "fontSize": "16px",
+      "shadow": "rgba(0, 0, 0, 0.4) 0px 8px 24px 0px",
+      "border": "0px solid rgb(0, 0, 0)",
+      "bg": "rgba(28, 27, 26, 0.95)",
+      "padding": "0px",
+      "overflow": "visible"
+    }
+  },
+  "footer": {
+    "x": 20,
+    "y": 633,
+    "width": 335,
+    "height": 49
+  },
+  "pill": {
+    "x": 20,
+    "y": 728,
+    "width": 335,
+    "height": 64
+  },
+  "detailHero": {
+    "x": 0,
+    "y": 0,
+    "width": 375,
+    "height": 447
+  },
+  "compact": {
+    "x": 20,
+    "y": 656,
+    "width": 280,
+    "height": 140
+  },
+  "errors": [],
+  "checks": [
+    "catalog3SVGschematics",
+    "exactcarddimensions",
+    "heartcontrastmaterial",
+    "selectedstate",
+    "blueprintscontent",
+    "footerclearance",
+    "favoritescrossscreen",
+    "favoritepersistence",
+    "homesections",
+    "hero55percent",
+    "related3",
+    "notfound",
+    "4catalogstates"
+  ]
+}

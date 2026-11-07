@@ -473,7 +473,7 @@ function QuickAction({
 }
 
 const styles = StyleSheet.create({
-  content: { paddingTop: SPACING.xl, paddingBottom: 130 },
+  content: { paddingTop: SPACING.xl, paddingBottom: 160 },
   header: {
     marginHorizontal: SPACING.xl,
     flexDirection: "row",
@@ -510,8 +510,6 @@ const styles = StyleSheet.create({
   heroText: { padding: SPACING.xl, gap: SPACING.xs },
   heroTitle: {
     ...TYPOGRAPHY.display32,
-    fontSize: 28,
-    lineHeight: 32,
     color: COLORS.foreground,
   },
   heroSubtitle: { ...TYPOGRAPHY.body15, color: COLORS.muted },
@@ -659,7 +657,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: `${COLORS.cardDeep}CC`,
+    backgroundColor: COLORS.scrim,
     padding: SPACING.xl,
   },
   modalCard: {

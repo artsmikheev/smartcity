@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "skills": {
+    "animate-expo": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/animate-expo/SKILL.md",
+      "computedHash": "5de09593d564091f9db60aabede7bed760251e118548272050a247c653c417d2"
+    },
+    "appllama-app-design-skill": {
+      "source": "Appllama/appllama-skills",
+      "sourceType": "github",
+      "skillPath": "skills/appllama-app-design-skill/SKILL.md",
+      "computedHash": "023b25559a5e9a4ab85ccffc9612d0d0f650608eb7f281dce8408a32649b2340"
+    },
+    "better-design": {
+      "source": "aurelienmaze/skills",
+      "sourceType": "github",
+      "skillPath": "better-design/SKILL.md",
+      "computedHash": "a0a78bd9a994ed18fae5a42459c5e3ef9a826b70d60ec4eec614c0fe21d76400"
+    },
+    "design-audit": {
+      "source": "abdulwasey/skills",
+      "sourceType": "github",
+      "skillPath": "skills/design-audit/SKILL.md",
+      "computedHash": "ac8cb91b38d306436e5025e90a6409e8db2009482814997df1668af44e31d0a0"
+    },
+    "design-lab": {
+      "source": "fellipeutaka/leon",
+      "sourceType": "github",
+      "skillPath": "skills/design-lab/SKILL.md",
+      "computedHash": "db96107f392bf8fff7e82fbdd74bc4ae6ae1b86f7c8ef83f67f89b14dd7264ac"
+    },
+    "expo-design-system": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "skillPath": "plugins/expo/skills/expo-design-system/SKILL.md",
+      "computedHash": "597dc0de48357b1217f6b35e44812b7c889aba33d02cdfe5a8490d54dd7b165d"
+    },
+    "expo-native-ui": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "skillPath": "plugins/expo/skills/expo-native-ui/SKILL.md",
+      "computedHash": "49d480a3f3b5acd3c027bf2b3a12bcab601be14e9467c956697f9a88bd4fbca0"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "89496d5dd00f4810205f351759594fc2742bf8eea85a2f2b2d1de59f4bd91576"
+    },
+    "react-native-design": {
+      "source": "brunoviews/agent-skills",
+      "sourceType": "github",
+      "skillPath": "react-native-design/SKILL.md",
+      "computedHash": "885e8998086359d1db627cee8cd9abd09caacd1aefe58cd8ab2000bb3dcc4eea"
+    },
+    "ui-design-dials": {
+      "source": "thakur698/universal-ui-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ui-design-dials/SKILL.md",
+      "computedHash": "00a7ff39fca654e0783409b5d9f3ad6d9e4062248a45378ea9b939abadef8ccc"
+    },
+    "ui-reference-first": {
+      "source": "thakur698/universal-ui-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ui-reference-first/SKILL.md",
+      "computedHash": "3a7ad28d397fef18dc57237912736154eadd758b47d2a869dd3da4c8e51bb598"
+    },
+    "ui-ux-pro-max": {
+      "source": "fellipeutaka/leon",
+      "sourceType": "github",
+      "skillPath": "skills/ui-ux-pro-max/SKILL.md",
+      "computedHash": "af3dcf03358db2cd731aed90fa673d9e0f45594b6a30670dcda818fc40721669"
+    }
+  }
+}
