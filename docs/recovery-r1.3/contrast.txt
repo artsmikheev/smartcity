@@ -1,0 +1,6 @@
+#262422 / #EDEAE4: 12.88:1 | normal AA PASS | large/UI AA PASS
+#BCB9B7 / #262422: 7.93:1 | normal AA PASS | large/UI AA PASS
+#B88F00 / #EDEAE4: 2.51:1 | normal AA FAIL | large/UI AA FAIL
+#1A1A1A / #B88F00: 5.77:1 | normal AA PASS | large/UI AA PASS
+#B88F00 / #262422: 5.13:1 | normal AA PASS | large/UI AA PASS
+#F37A72 / #1C1B1A: 6.42:1 | normal AA PASS | large/UI AA PASS

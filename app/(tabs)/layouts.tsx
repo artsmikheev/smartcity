@@ -1,88 +1,134 @@
-import { useRouter } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useMemo, useState } from 'react';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { COLORS } from "@/constants/theme";
-import { DEMO_NOTICE, layoutItems } from "@/constants/mock-data";
-import { Eyebrow, IconButton, PrimaryButton, SectionHeading, Tag } from "@/components/app-ui";
-import { ScreenContainer } from "@/components/screen-container";
-import { track } from "@/lib/telemetry";
-
-const filters = ["Все", "1-комн.", "2-комн.", "3-комн."];
+import { ScreenContainer } from '@/components/screen-container';
+import { ApartmentCard } from '@/components/apartment-card';
+import { CatalogSkeleton, CatalogState } from '@/components/catalog-state';
+import { CatalogFilters } from '@/components/catalog-filters';
+import { COLORS, TYPOGRAPHY, SPACING } from '@/constants/theme';
+import { catalogPreview, useCatalog } from '@/hooks/use-catalog';
+import { apartmentTitle, variantsLabel, visibleApartments } from '@/lib/catalog-model';
+import { track } from '@/lib/telemetry';
+import type { CatalogMode, PriceSort } from '@/types/catalog';
 
 export default function LayoutsScreen() {
   const router = useRouter();
-  const [activeFilter, setActiveFilter] = useState("Все");
-  const visible = useMemo(() => activeFilter === "Все" ? layoutItems : layoutItems.filter((item) => item.rooms === activeFilter), [activeFilter]);
+  const params = useLocalSearchParams<{ preview?: string }>();
+  const catalog = useCatalog(catalogPreview(params.preview));
+  const [mode, setMode] = useState<CatalogMode>('apartments');
+  const [rooms, setRooms] = useState<number | null>(null);
+  const [sort, setSort] = useState<PriceSort>('price_asc');
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [favorites, setFavorites] = useState<Set<string>>(() => new Set());
+  const visible = useMemo(() => visibleApartments(catalog.data, mode, rooms, sort), [catalog.data, mode, rooms, sort]);
+  const status = catalog.error ? 'error' : catalog.loading ? 'loading' : visible.length === 0 ? 'empty' : 'content';
 
-  useEffect(() => { track("screen_view", { screen: "layouts" }); }, []);
+  useEffect(() => { track('screen_view', { screen: 'layouts' }); }, []);
+
+  const reset = () => {
+    setRooms(null);
+    setMode('apartments');
+    setSort('price_asc');
+    if (catalog.preview && status === 'empty') router.setParams({ preview: 'content' });
+  };
+
+  const retry = () => {
+    if (catalog.preview) router.setParams({ preview: 'content' });
+    else catalog.retry();
+  };
+
+  const toggleFavorite = (id: string) => {
+    setFavorites((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const header = (
+    <View>
+      <Text style={styles.eyebrow}>НАУКОГРАД / РЕУТОВ</Text>
+      <View style={styles.titleRow}>
+        <Text accessibilityRole="header" style={styles.title}>Планировки</Text>
+        <Pressable testID="catalog-filter" accessibilityRole="button" accessibilityLabel="Фильтры" onPress={() => setFiltersOpen(true)} style={styles.filterHit}>
+          <View style={styles.filterCircle}><Ionicons name="filter-outline" size={20} color={COLORS.foreground} accessible={false} /></View>
+        </Pressable>
+      </View>
+      <Text numberOfLines={1} style={styles.subtitle}>Тишина, свет, честные метры.</Text>
+      <View style={styles.modes} accessibilityLabel="Вид каталога">
+        {([{ value: 'apartments', label: 'Квартиры' }, { value: 'blueprints', label: 'Чертежи' }] as const).map((item) => (
+          <Pressable key={item.value} accessibilityRole="button" accessibilityState={{ selected: mode === item.value }} aria-pressed={mode === item.value} onPress={() => setMode(item.value)} style={[styles.modeButton, mode === item.value && styles.activeMode]}>
+            <Text style={[styles.modeLabel, mode === item.value && styles.activeModeLabel]}>{item.label}</Text>
+          </Pressable>
+        ))}
+      </View>
+      <View style={styles.sortRow}>
+        <Text testID="catalog-count" style={styles.count}>{variantsLabel(visible.length)}</Text>
+        <Pressable accessibilityRole="button" accessibilityLabel={sort === 'price_asc' ? 'Сначала дешевле. Изменить сортировку' : 'Сначала дороже. Изменить сортировку'} onPress={() => setSort((current) => current === 'price_asc' ? 'price_desc' : 'price_asc')} style={styles.sortHit}>
+          <Text style={styles.sortLabel}>{sort === 'price_asc' ? 'Сначала дешевле' : 'Сначала дороже'}</Text>
+          <Ionicons name={sort === 'price_asc' ? 'chevron-down' : 'chevron-up'} size={14} color={COLORS.foreground} accessible={false} />
+        </Pressable>
+      </View>
+    </View>
+  );
+
+  const footer = status === 'content' ? (
+    <View testID="catalog-footer" style={styles.footer}>
+      <View style={styles.divider} />
+      <Text numberOfLines={2} style={styles.footerCopy}>Материалы, цены и наличие уточняются командой проекта.</Text>
+      {catalog.data.some((apartment) => apartment.is_demo) && <Text style={styles.demoCopy}>Демо-данные · концептные изображения, не планировки.</Text>}
+    </View>
+  ) : null;
 
   return (
-    <ScreenContainer safeAreaClassName="bg-background" className="px-5">
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <View style={styles.header}>
-          <View><Eyebrow color={COLORS.accent}>Каталог / выбор</Eyebrow><Text style={styles.title}>Планировки</Text></View>
-          <IconButton icon="options-outline" label="Фильтры" onPress={() => setActiveFilter("Все")} />
-        </View>
-        <Text style={styles.intro}>Соберите свой сценарий жизни — детали по площадям, ценам и наличию подтвердит менеджер.</Text>
-        <View style={styles.filterRow}>
-          {filters.map((filter) => <Pressable key={filter} onPress={() => { setActiveFilter(filter); track("layout_filter", { filter }); }} style={[styles.filter, activeFilter === filter && styles.filterActive]}><Text style={[styles.filterText, activeFilter === filter && styles.filterTextActive]}>{filter}</Text></Pressable>)}
-        </View>
-        <View style={styles.notice}><View style={styles.noticeMark}><Text style={styles.noticeMarkText}>i</Text></View><Text style={styles.noticeText}>{DEMO_NOTICE}</Text></View>
-        <SectionHeading title={`${visible.length} сценария`} />
-        <View style={styles.list}>
-          {visible.map((item, index) => (
-            <Pressable key={item.id} style={({ pressed }) => [styles.card, pressed && styles.pressed]} onPress={() => router.push({ pathname: "/lead", params: { type: "layout", item: item.title } })}>
-              <View style={[styles.planPreview, { backgroundColor: item.tone === "lime" ? COLORS.accent : item.tone === "sand" ? COLORS.foreground : COLORS.accent }]}>
-                <View style={styles.planFrame}><View style={styles.planRoomA} /><View style={styles.planRoomB} /><View style={styles.planRoomC} /></View>
-                <Text style={styles.planNumber}>0{index + 1}</Text>
-              </View>
-              <View style={styles.cardBody}>
-                <View style={styles.cardTop}><Tag tone={item.tone === "lime" ? "lime" : item.tone === "amber" ? "amber" : "neutral"}>{item.rooms}</Tag><Text style={styles.cardStatus}>{item.status}</Text></View>
-                <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text style={styles.cardMeta}>{item.area}  ·  {item.floor}</Text>
-                <Text style={styles.cardFeature}>{item.feature}</Text>
-                <View style={styles.cardAction}><Text style={styles.cardActionText}>Запросить детали</Text><Text style={styles.arrow}>↗</Text></View>
-              </View>
-            </Pressable>
-          ))}
-        </View>
-        <PrimaryButton label="Не знаю, с чего начать" icon="chatbubble-ellipses-outline" onPress={() => router.push({ pathname: "/lead", params: { type: "selection" } })} />
-      </ScrollView>
+    <ScreenContainer>
+      <FlatList
+        testID="catalog-list"
+        style={styles.list}
+        data={status === 'content' ? visible : []}
+        keyExtractor={(apartment) => apartment.id}
+        extraData={favorites}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={header}
+        ListHeaderComponentStyle={styles.header}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        renderItem={({ item }) => (
+          <ApartmentCard apartment={item} variant="horizontal" favorited={favorites.has(item.id)} onToggleFavorite={() => toggleFavorite(item.id)} onPress={() => router.push({ pathname: '/lead', params: { type: 'layout', item: apartmentTitle(item).replace('\n', ', ') } })} />
+        )}
+        ListEmptyComponent={status === 'loading' ? <CatalogSkeleton /> : <CatalogState kind={status === 'error' ? 'error' : 'empty'} unavailable={catalog.unavailable} onAction={status === 'error' ? retry : reset} />}
+        ListFooterComponent={footer}
+      />
+      <CatalogFilters visible={filtersOpen} rooms={rooms} onChange={setRooms} onClose={() => setFiltersOpen(false)} />
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  content: { paddingTop: 13, paddingBottom: 130, gap: 18 },
-  header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  title: { color: COLORS.foreground, fontSize: 32, lineHeight: 36, fontWeight: "800", letterSpacing: -1, marginTop: 6 },
-  intro: { color: COLORS.muted, fontSize: 14, lineHeight: 20, maxWidth: 320 },
-  filterRow: { flexDirection: "row", gap: 8, flexWrap: "wrap" },
-  filter: { paddingHorizontal: 13, paddingVertical: 10, borderRadius: 12, backgroundColor: COLORS.cardBackground, borderWidth: 1, borderColor: COLORS.border },
-  filterActive: { backgroundColor: COLORS.accent, borderColor: COLORS.accent },
-  filterText: { color: COLORS.muted, fontSize: 12, fontWeight: "700" },
-  filterTextActive: { color: COLORS.background },
-  notice: { flexDirection: "row", gap: 9, alignItems: "center", padding: 11, borderRadius: 14, backgroundColor: COLORS.cardBackground, borderWidth: 1, borderColor: COLORS.border },
-  noticeMark: { width: 20, height: 20, borderRadius: 10, backgroundColor: COLORS.accent, alignItems: "center", justifyContent: "center" },
-  noticeMarkText: { color: COLORS.background, fontSize: 13, fontWeight: "900" },
-  noticeText: { color: COLORS.muted, fontSize: 11, lineHeight: 15, flex: 1 },
-  list: { gap: 12 },
-  card: { backgroundColor: COLORS.cardBackground, borderRadius: 22, overflow: "hidden", borderWidth: 1, borderColor: COLORS.border },
-  planPreview: { height: 142, position: "relative", overflow: "hidden", padding: 15 },
-  planFrame: { position: "absolute", width: 160, height: 104, right: 24, top: 18, borderWidth: 2, borderColor: COLORS.background + "66", transform: [{ rotate: "-5deg" }] },
-  planRoomA: { position: "absolute", left: 0, top: 0, width: 54, height: 50, borderRightWidth: 2, borderBottomWidth: 2, borderColor: COLORS.background + "66" },
-  planRoomB: { position: "absolute", left: 54, top: 0, width: 55, height: 50, borderRightWidth: 2, borderBottomWidth: 2, borderColor: COLORS.background + "66" },
-  planRoomC: { position: "absolute", left: 54, top: 50, width: 76, height: 52, borderTopWidth: 2, borderColor: COLORS.background + "66" },
-  planNumber: { color: COLORS.background + "88", fontSize: 57, lineHeight: 60, fontWeight: "900", letterSpacing: -4 },
-  cardBody: { padding: 16 },
-  cardTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 10 },
-  cardStatus: { color: COLORS.mutedDark, fontSize: 10, textTransform: "uppercase", letterSpacing: 0.6 },
-  cardTitle: { color: COLORS.foreground, fontSize: 20, fontWeight: "800", marginBottom: 5 },
-  cardMeta: { color: COLORS.muted, fontSize: 12, marginBottom: 8 },
-  cardFeature: { color: COLORS.muted, fontSize: 13, lineHeight: 18 },
-  cardAction: { marginTop: 15, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  cardActionText: { color: COLORS.accent, fontSize: 13, fontWeight: "800" },
-  arrow: { color: COLORS.accent, fontSize: 18 },
-  pressed: { opacity: 0.78 },
+  list: { flex: 1 },
+  content: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.xl, paddingBottom: 130 },
+  header: { marginBottom: SPACING.lg },
+  eyebrow: { ...TYPOGRAPHY.meta11, color: COLORS.muted, letterSpacing: 1 },
+  titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: SPACING.sm },
+  title: { ...TYPOGRAPHY.display36, color: COLORS.foreground },
+  filterHit: { position: 'absolute', right: 0, top: -SPACING.xs, width: 48, height: 48, padding: 2 },
+  filterCircle: { width: 44, height: 44, borderRadius: 22, borderColor: COLORS.border, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  subtitle: { ...TYPOGRAPHY.body15, color: COLORS.muted, marginTop: SPACING.xxl },
+  modes: { flexDirection: 'row', gap: SPACING.xxl, marginTop: SPACING.xxl },
+  modeButton: { minHeight: 48, paddingBottom: SPACING.sm, justifyContent: 'center', borderBottomWidth: 2, borderBottomColor: 'transparent' },
+  activeMode: { borderBottomColor: COLORS.accent },
+  modeLabel: { fontSize: 14, lineHeight: 20, fontWeight: '500', color: COLORS.muted },
+  activeModeLabel: { color: COLORS.foreground },
+  sortRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: SPACING.xxxl },
+  count: { ...TYPOGRAPHY.body13, color: COLORS.muted },
+  sortHit: { minHeight: 48, flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },
+  sortLabel: { ...TYPOGRAPHY.body13, color: COLORS.foreground },
+  separator: { height: SPACING.lg },
+  footer: { marginTop: SPACING.xxxl },
+  divider: { height: 1, backgroundColor: COLORS.border, marginBottom: SPACING.md },
+  footerCopy: { ...TYPOGRAPHY.meta11, textTransform: 'none', letterSpacing: 0, color: COLORS.muted, textAlign: 'center' },
+  demoCopy: { ...TYPOGRAPHY.meta11, textTransform: 'none', letterSpacing: 0, color: COLORS.muted, textAlign: 'center', marginTop: SPACING.sm },
 });

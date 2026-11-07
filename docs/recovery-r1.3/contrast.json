@@ -1,0 +1,114 @@
+[
+  {
+    "role": "Card text",
+    "fg": "#EDEAE4",
+    "bg": "#262422",
+    "ratio": 12.88,
+    "minimum": 4.5,
+    "pass": true
+  },
+  {
+    "role": "Card meta",
+    "fg": "#BCB9B7",
+    "bg": "#262422",
+    "ratio": 7.93,
+    "minimum": 4.5,
+    "pass": true
+  },
+  {
+    "role": "Gold / foreground (NOT used)",
+    "fg": "#B88F00",
+    "bg": "#EDEAE4",
+    "ratio": 2.51,
+    "minimum": 3,
+    "pass": false
+  },
+  {
+    "role": "Primary text",
+    "fg": "#1A1A1A",
+    "bg": "#B88F00",
+    "ratio": 5.77,
+    "minimum": 4.5,
+    "pass": true
+  },
+  {
+    "role": "Filter active outline/text",
+    "fg": "#B88F00",
+    "bg": "#262422",
+    "ratio": 5.13,
+    "minimum": 4.5,
+    "pass": true
+  },
+  {
+    "role": "Screen display",
+    "fg": "#EDEAE4",
+    "bg": "#1C1B1A",
+    "ratio": 14.32,
+    "minimum": 4.5,
+    "pass": true
+  },
+  {
+    "role": "Screen secondary",
+    "fg": "#BCB9B7",
+    "bg": "#1C1B1A",
+    "ratio": 8.81,
+    "minimum": 4.5,
+    "pass": true
+  },
+  {
+    "role": "Border / background",
+    "fg": "#9A9896",
+    "bg": "#1C1B1A",
+    "ratio": 5.98,
+    "minimum": 3,
+    "pass": true
+  },
+  {
+    "role": "Border / card",
+    "fg": "#9A9896",
+    "bg": "#262422",
+    "ratio": 5.38,
+    "minimum": 3,
+    "pass": true
+  },
+  {
+    "role": "Empty icon / muted circle",
+    "fg": "#1C1B1A",
+    "bg": "#BCB9B7",
+    "ratio": 8.81,
+    "minimum": 3,
+    "pass": true
+  },
+  {
+    "role": "Error icon",
+    "fg": "#F37A72",
+    "bg": "#1C1B1A",
+    "ratio": 6.42,
+    "minimum": 3,
+    "pass": true
+  },
+  {
+    "role": "Mode underline",
+    "fg": "#B88F00",
+    "bg": "#1C1B1A",
+    "ratio": 5.71,
+    "minimum": 3,
+    "pass": true
+  },
+  {
+    "role": "Heart outline / worst white underlay",
+    "fg": "#BCB9B7",
+    "bg": "#605F5F",
+    "ratio": 3.26,
+    "minimum": 3,
+    "pass": true
+  },
+  {
+    "role": "Heart selected / worst white underlay",
+    "fg": "#B88F00",
+    "bg": "#605F5F",
+    "ratio": 2.11,
+    "minimum": 3,
+    "pass": false
+  }
+]

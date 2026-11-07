@@ -1,0 +1,30 @@
+=== R1.2 attempt A succeeded ===
+[33med1067c[m R1.2: restore tokens, types, fonts, floating tab bar
+[33me0fa63a[m R1.1: add PostgreSQL harness bootstrap for local testing
+[33m774d158[m Recovery R0: restore Phase 0 SQL specification (migration, seed, RLS tests)
+ed1067c80d92c179eba59f5cf17464f0622b1800	refs/heads/main
+ed1067c80d92c179eba59f5cf17464f0622b1800	refs/tags/recovery-r1.2
+
+=== R1.3 changes ===
+ [31mM[m TODO.md
+ [31mM[m app/(tabs)/layouts.tsx
+ [31mM[m constants/mock-data.ts
+ [31mM[m plan.md
+[31m??[m .agents/
+[31m??[m .claude/
+[31m??[m .grok/
+[31m??[m components/apartment-card.tsx
+[31m??[m components/catalog-filters.tsx
+[31m??[m components/catalog-state.tsx
+[31m??[m docs/RECOVERY-R0-LOSS-REPORT.md
+[31m??[m docs/UI-DESIGN-AUDIT-2026-11-06.md
+[31m??[m hooks/use-catalog.ts
+[31m??[m lib/api/
+[31m??[m lib/catalog-model.ts
+[31m??[m lib/storage.ts
+[31m??[m skills-lock.json
+[31m??[m tests/catalog-model.test.ts
+[31m??[m tests/media-resolver.test.ts
+[31m??[m types/catalog.ts
+
+=== forbidden tracked diff ===
