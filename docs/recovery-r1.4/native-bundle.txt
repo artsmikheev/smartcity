@@ -1,0 +1,7 @@
+React Compiler enabled
+Starting Metro Bundler
+
+Android Bundled 2954ms node_modules/expo-router/entry.js (2170 modules)
+Writing bundle output to: /tmp/smartcity-r14-native/index.android.bundle
+Copying 68 asset files
+Done writing bundle output

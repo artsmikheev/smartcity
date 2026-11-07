@@ -1,0 +1,16 @@
+#EDEAE4 / #1C1B1A: 14.32:1 | normal AA PASS | large/UI AA PASS
+#BCB9B7 / #1C1B1A: 8.81:1 | normal AA PASS | large/UI AA PASS
+#B88F00 / #1C1B1A: 5.71:1 | normal AA PASS | large/UI AA PASS
+#EDEAE4 / #262422: 12.88:1 | normal AA PASS | large/UI AA PASS
+#BCB9B7 / #262422: 7.93:1 | normal AA PASS | large/UI AA PASS
+#B88F00 / #262422: 5.13:1 | normal AA PASS | large/UI AA PASS
+#1A1A1A / #B88F00: 5.77:1 | normal AA PASS | large/UI AA PASS
+#9A9896 / #262422: 5.38:1 | normal AA PASS | large/UI AA PASS
+#9A9896 / #1C1B1A: 5.98:1 | normal AA PASS | large/UI AA PASS
+#F37A72 / #262422: 5.77:1 | normal AA PASS | large/UI AA PASS
+#F37A72 / #1C1B1A: 6.42:1 | normal AA PASS | large/UI AA PASS
+#B88F00 / #121212: 6.22:1 | normal AA PASS | large/UI AA PASS
+#BCB9B7 / #121212: 9.60:1 | normal AA PASS | large/UI AA PASS
+#BCB9B7 / #3E3D3C: 5.55:1 | normal AA PASS | large/UI AA PASS
+#B88F00 / #3E3D3C: 3.60:1 | normal AA FAIL | large/UI AA PASS
+#2E2C2A / #262422: 1.11:1 | normal AA FAIL | large/UI AA FAIL

@@ -1,121 +1,223 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useQuery } from '@tanstack/react-query';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { usePreventRemove, usePreventRemoveContext, useRoute } from 'expo-router/react-navigation';
+import { useEffect, useRef, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { ActivityIndicator, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { COLORS } from "@/constants/theme";
-import { PrimaryButton, Tag } from "@/components/app-ui";
-import { ScreenContainer } from "@/components/screen-container";
-import { track } from "@/lib/telemetry";
-
-const typeLabels: Record<string, string> = {
-  consultation: "Консультация",
-  layout: "Планировка",
-  selection: "Подбор",
-  updates: "Обновления проекта",
-};
+import { LeadButton, LeadChannels, LeadConsentField, LeadField } from '@/components/lead-fields';
+import { ScreenContainer } from '@/components/screen-container';
+import { COLORS, RADIUS, TYPOGRAPHY } from '@/constants/theme';
+import { supabaseConfigured } from '@/lib/api/catalog';
+import { clearAcceptedLeadReference, fetchPublishedLeadConsent, submitLead } from '@/lib/api/leads';
+import { firstLeadParam, formatRuPhone, isDemoConsent, leadFormSchema, leadHeading, toLeadServiceError, type LeadFormInput, type LeadFormValues } from '@/lib/lead-model';
 
 export default function LeadScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ type?: string; item?: string }>();
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [channel, setChannel] = useState("Телефон");
-  const [comment, setComment] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [leadId, setLeadId] = useState("");
-  const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const requestType = typeLabels[params.type ?? "consultation"] ?? typeLabels.consultation;
+  const params = useLocalSearchParams<{ type?: string | string[]; apartment_id?: string | string[]; layout_id?: string | string[]; demo?: string | string[]; preview?: string | string[] }>();
+  const type = firstLeadParam(params.type);
+  const demo = firstLeadParam(params.demo) === '1';
+  const previewSubmitting = __DEV__ && firstLeadParam(params.preview) === 'submitting';
+  const heading = leadHeading(type);
+  const phoneRef = useRef<TextInput>(null);
+  const submitLock = useRef(false);
+  const successTransitionStarted = useRef(false);
+  const modalCloseRef = useRef<View>(null);
+  const [sending, setSending] = useState(false);
+  const [successPending, setSuccessPending] = useState(false);
+  // SDK 57 exposes its installed React Navigation hooks through Expo Router.
+  usePreventRemove(sending, () => {});
+  const { key: routeKey } = useRoute();
+  const { preventedRoutes } = usePreventRemoveContext();
+  const removalPrevented = Boolean(preventedRoutes[routeKey]?.preventRemove);
+  const [submitError, setSubmitError] = useState('');
+  const [consentOpen, setConsentOpen] = useState(false);
+  const [reviewedVersion, setReviewedVersion] = useState<string | null>(null);
+  const [acceptedVersion, setAcceptedVersion] = useState<string | null>(null);
+  const [consentedAt, setConsentedAt] = useState<string | null>(null);
+  const consentQuery = useQuery({
+    queryKey: ['lead', 'published-consent'],
+    queryFn: ({ signal }) => fetchPublishedLeadConsent(signal),
+    enabled: supabaseConfigured && !previewSubmitting,
+    retry: false,
+    staleTime: 60_000,
+  });
+  const consentDocument = consentQuery.data;
+  const demoConsent = consentDocument ? isDemoConsent(consentDocument) : false;
+  const busy = sending || previewSubmitting;
+  const { control, handleSubmit, setValue, formState: { errors } } = useForm<LeadFormInput, unknown, LeadFormValues>({
+    resolver: zodResolver(leadFormSchema),
+    defaultValues: { name: '', phone: '', channel: 'call', consent: false },
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
+    shouldFocusError: true,
+  });
 
-  const submit = () => {
-    if (isSubmitting) return;
-    if (name.trim().length < 2) { setError("Укажите имя — так менеджер сможет обратиться к вам."); return; }
-    if (phone.replace(/\D/g, "").length < 10) { setError("Проверьте номер телефона."); return; }
-    if (!consent) { setError("Подтвердите согласие на обратную связь."); return; }
-    setError("");
-    setIsSubmitting(true);
-    track("lead_submitted", { type: requestType, channel });
-    setTimeout(() => { setIsSubmitting(false); setLeadId(`UG-${String(Date.now()).slice(-6)}`); setSubmitted(true); }, 420);
-  };
+  useEffect(() => { clearAcceptedLeadReference(); }, []);
 
-  if (submitted) {
-    return (
-      <ScreenContainer safeAreaClassName="bg-background" className="px-5">
-        <Stack.Screen options={{ title: "Заявка", presentation: "modal" }} />
-        <View style={styles.successWrap}>
-          <View style={styles.successMark}><Ionicons name="checkmark" size={30} color={COLORS.background} /></View>
-          <Tag tone="lime">Заявка создана</Tag>
-          <Text style={styles.successTitle}>Следующий шаг — за командой проекта.</Text>
-          <Text style={styles.successCopy}>Мы сохранили запрос «{requestType}». В реальном контуре здесь появятся ID лида и канал подтверждения.</Text>
-          <View style={styles.idCard}><Text style={styles.idLabel}>ДЕМО-ID</Text><Text style={styles.idValue}>{leadId || "UG-000000"}</Text></View>
-          <PrimaryButton label="Вернуться на главную" onPress={() => router.replace("/")} icon="home-outline" />
-          <Pressable onPress={() => router.back()} style={styles.closeLink}><Text style={styles.closeLinkText}>Закрыть</Text></Pressable>
-        </View>
-      </ScreenContainer>
-    );
+  useEffect(() => {
+    // Wait for the provider update too, not just the local sending state.
+    if (!successPending || sending || removalPrevented || successTransitionStarted.current) return;
+    successTransitionStarted.current = true;
+    router.replace('/lead/success');
+  }, [successPending, sending, removalPrevented, router]);
+
+  function close() {
+    if (busy) return;
+    if (router.canGoBack()) router.back();
+    else router.replace('/');
   }
 
+  function toggleConsent(current: boolean) {
+    if (busy) return;
+    if (current) {
+      setValue('consent', false, { shouldValidate: true });
+      setConsentedAt(null);
+      setAcceptedVersion(null);
+      return;
+    }
+    if (!consentDocument || demoConsent || reviewedVersion !== consentDocument.version) {
+      setConsentOpen(true);
+      return;
+    }
+    setConsentedAt(new Date().toISOString());
+    setAcceptedVersion(consentDocument.version);
+    setValue('consent', true, { shouldValidate: true });
+  }
+
+  function closeConsent() {
+    if (consentDocument) setReviewedVersion(consentDocument.version);
+    setConsentOpen(false);
+  }
+
+  async function onValid(values: LeadFormValues) {
+    setSubmitError('');
+    if (!consentDocument || demoConsent || reviewedVersion !== consentDocument.version || acceptedVersion !== consentDocument.version || !consentedAt) {
+      setValue('consent', false);
+      setSubmitError(demoConsent ? 'Опубликован только демо-текст. Юридическая редакция не утверждена; отправка недоступна.' : 'Откройте актуальный текст согласия и подтвердите его перед отправкой.');
+      return;
+    }
+    setSending(true);
+    try {
+      await submitLead(values, {
+        type,
+        apartmentId: firstLeadParam(params.apartment_id),
+        layoutId: firstLeadParam(params.layout_id),
+        demo,
+      }, consentDocument, consentedAt);
+      setSuccessPending(true);
+    } catch (error) {
+      const safeError = toLeadServiceError(error);
+      setSubmitError(safeError.message);
+      if (safeError.code === 'consent_unavailable') {
+        setValue('consent', false);
+        setConsentedAt(null);
+        setAcceptedVersion(null);
+        setReviewedVersion(null);
+        void consentQuery.refetch();
+      }
+    } finally {
+      setSending(false);
+    }
+  }
+
+  // The lock is acquired before async validation, not after a render/network tick.
+  function send() {
+    if (submitLock.current || busy) return;
+    submitLock.current = true;
+    void handleSubmit(onValid, () => {
+      setSubmitError(!supabaseConfigured ? 'Сервис заявок не подключён. Отправка недоступна.' : 'Проверьте отмеченные поля и подтвердите согласие.');
+    })().catch((error: unknown) => setSubmitError(toLeadServiceError(error).message)).finally(() => { submitLock.current = false; });
+  }
+
+  const consentStatus = previewSubmitting ? null
+    : !supabaseConfigured ? 'Текст согласия станет доступен после подключения сервиса.'
+    : consentQuery.isPending ? 'Загружаем текст согласия…'
+    : consentQuery.isError ? 'Не удалось загрузить согласие. Откройте ссылку и повторите загрузку.'
+    : demoConsent ? 'Демо-текст согласия. Не утверждён; реальная отправка недоступна.'
+    : reviewedVersion !== consentDocument?.version ? 'Перед согласием откройте и прочитайте текст.' : null;
+
   return (
-    <ScreenContainer safeAreaClassName="bg-background" className="px-5">
-      <Stack.Screen options={{ title: "Заявка", presentation: "modal" }} />
-      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === "ios" ? "padding" : undefined}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-          <View style={styles.topRow}><Pressable onPress={() => router.back()} style={styles.back}><Text style={styles.backGlyph}>⌄</Text></Pressable><Tag tone="lime">{requestType}</Tag><View style={{ width: 38 }} /></View>
-          <Text style={styles.title}>{params.item ? `Запросить детали\n«${params.item}»` : "Выберите удобный\nследующий шаг"}</Text>
-          <Text style={styles.copy}>Оставьте только необходимые данные. Это заявка на связь, а не автоматическое бронирование.</Text>
+    <ScreenContainer edges={['top', 'left', 'right', 'bottom']} safeAreaClassName="bg-background" className="px-5" testID="lead-screen">
+      <Stack.Screen options={{ title: 'Оставить заявку', headerShown: false, presentation: 'card' }} />
+      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" contentInsetAdjustmentBehavior="automatic">
+          <View style={styles.headerRow}>
+            <Text style={styles.kicker}>{heading.kicker}</Text>
+            <Pressable testID="lead-close" accessibilityRole="button" accessibilityLabel="Закрыть заявку" accessibilityState={{ disabled: busy }} disabled={busy} onPress={close} style={({ pressed }) => [styles.closeHit, pressed && styles.pressed]}>
+              <View style={styles.closeCircle}><Ionicons accessible={false} aria-hidden name="close" size={22} color={COLORS.foreground} /></View>
+            </Pressable>
+          </View>
+          <Text accessibilityRole="header" style={styles.title}>{heading.title}</Text>
+          <Text style={styles.copy}>Расскажем о проекте и подберём следующий шаг</Text>
           <View style={styles.form}>
-            <Field label="Имя" value={name} onChangeText={setName} placeholder="Как к вам обращаться?" autoCapitalize="words" />
-            <Field label="Телефон" value={phone} onChangeText={setPhone} placeholder="+7 ___ ___-__-__" keyboardType="phone-pad" />
-            <Text style={styles.fieldLabel}>Удобный канал связи</Text>
-            <View style={styles.channelRow}>{["Телефон", "Telegram", "MAX"].map((item) => <Pressable key={item} onPress={() => setChannel(item)} style={[styles.channel, channel === item && styles.channelActive]}><Text style={[styles.channelText, channel === item && styles.channelTextActive]}>{item}</Text></Pressable>)}</View>
-            <Field label="Комментарий · необязательно" value={comment} onChangeText={setComment} placeholder="Например, интересует 2-комнатная" multiline />
-            <Pressable onPress={() => setConsent((value) => !value)} style={styles.consentRow}><View style={[styles.checkbox, consent && styles.checkboxActive]}>{consent ? <Ionicons name="checkmark" size={15} color={COLORS.background} /> : null}</View><Text style={styles.consentText}>Согласен(на) на обратную связь по заявке и обработку данных по политике проекта.</Text></Pressable>
-            {error ? <Text style={styles.error}>{error}</Text> : null}
-            <PrimaryButton label={isSubmitting ? "Сохраняем…" : "Отправить заявку"} onPress={submit} icon={isSubmitting ? "time-outline" : "arrow-forward"} />
-            <Text style={styles.formHint}>В боевом контуре заявка получит уникальный ID, будет сохранена в CRM и передана ответственному менеджеру через серверную интеграцию.</Text>
+            {submitError ? <View testID="lead-error" accessibilityRole="alert" accessibilityLiveRegion="polite">
+              <View style={styles.errorBox}><Ionicons accessible={false} aria-hidden name="alert-circle-outline" size={20} color={COLORS.error} /><Text selectable style={styles.errorText}>{submitError}</Text></View>
+            </View> : null}
+            <Controller control={control} name="name" render={({ field }) => (
+              <LeadField id="lead-name" testID="inputname" label="ИМЯ" value={field.value} onChangeText={field.onChange} onBlur={field.onBlur} ref={field.ref} placeholder="Как к вам обращаться?" autoCapitalize="words" autoComplete="name" textContentType="name" returnKeyType="next" onSubmitEditing={() => phoneRef.current?.focus()} editable={!busy} error={errors.name?.message} />
+            )} />
+            <Controller control={control} name="phone" render={({ field }) => (
+              <LeadField id="lead-phone" testID="inputphone" label="НОМЕР ТЕЛЕФОНА" value={field.value} onChangeText={(value) => field.onChange(formatRuPhone(value))} onBlur={field.onBlur} ref={(node) => { phoneRef.current = node; field.ref(node); }} placeholder="+7 (___) ___-__-__" keyboardType="phone-pad" inputMode="tel" autoComplete="tel" textContentType="telephoneNumber" autoCorrect={false} autoCapitalize="none" returnKeyType="done" onSubmitEditing={send} editable={!busy} error={errors.phone?.message} />
+            )} />
+            <Controller control={control} name="channel" render={({ field }) => <LeadChannels value={field.value} onChange={field.onChange} disabled={busy} error={errors.channel?.message} />} />
+            <Controller control={control} name="consent" render={({ field }) => <LeadConsentField checked={field.value && acceptedVersion === consentDocument?.version} disabled={busy} onToggle={() => toggleConsent(field.value && acceptedVersion === consentDocument?.version)} onRead={() => setConsentOpen(true)} error={errors.consent?.message} />} />
+            {consentStatus ? <Text testID="lead-consent-status" accessibilityLiveRegion="polite" style={styles.status}>{consentStatus}</Text> : null}
+            <View style={styles.submitWrap}>
+              <LeadButton testID="lead-submit" label="Отправить" onPress={send} busy={busy} disabled={busy} />
+              {previewSubmitting ? <Text testID="lead-preview-note" accessibilityLiveRegion="polite" style={styles.status}>Демо-состояние: отправка не выполняется</Text> : null}
+            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <Modal visible={consentOpen} transparent animationType="none" onRequestClose={closeConsent} onShow={() => {
+        if (consentDocument) setReviewedVersion(consentDocument.version);
+        modalCloseRef.current?.focus();
+      }}>
+        <View style={styles.modalBackdrop}>
+          <View testID="lead-consent-modal" role="dialog" aria-modal accessibilityLabel="Согласие на обработку данных" accessibilityViewIsModal style={styles.modalCard}>
+            <View style={styles.modalHeader}>
+              <Text accessibilityRole="header" style={styles.modalTitle}>Согласие на обработку данных</Text>
+              <Pressable ref={modalCloseRef} accessibilityRole="button" accessibilityLabel="Закрыть текст согласия" onPress={closeConsent} style={({ pressed }) => [styles.closeHit, pressed && styles.pressed]}><Ionicons accessible={false} aria-hidden name="close" size={24} color={COLORS.foreground} /></Pressable>
+            </View>
+            <ScrollView contentContainerStyle={styles.modalBody}>
+              {consentDocument ? <>
+                <Text style={styles.status}>Версия {consentDocument.version}</Text>
+                {demoConsent ? <Text style={styles.demoNotice}>ДЕМО-ТЕКСТ. НЕ УТВЕРЖДЁН. Не используется для реальной отправки заявки.</Text> : null}
+                <Text selectable style={styles.copy}>{consentDocument.body}</Text>
+                <Text selectable style={styles.status}>Правовое основание: {consentDocument.legal_basis}</Text>
+              </> : consentQuery.isFetching ? <><ActivityIndicator color={COLORS.accent} /><Text style={styles.copy}>Загружаем текст согласия…</Text></> : <Text selectable style={styles.copy}>{!supabaseConfigured ? 'Сервис не подключён. Опубликованный текст согласия недоступен; отправка заявки не выполняется.' : 'Не удалось получить опубликованный текст согласия. Повторите загрузку или вернитесь позже.'}</Text>}
+            </ScrollView>
+            <LeadButton label={consentDocument ? 'Вернуться к форме' : 'Закрыть'} onPress={closeConsent} secondary />
+            {!consentDocument && supabaseConfigured && !consentQuery.isFetching ? <LeadButton testID="lead-consent-retry" label="Повторить загрузку" onPress={() => { void consentQuery.refetch(); }} secondary /> : null}
+          </View>
+        </View>
+      </Modal>
     </ScreenContainer>
   );
 }
 
-function Field({ label, value, onChangeText, placeholder, multiline, keyboardType, autoCapitalize = "sentences" }: { label: string; value: string; onChangeText: (value: string) => void; placeholder: string; multiline?: boolean; keyboardType?: "default" | "phone-pad"; autoCapitalize?: "none" | "sentences" | "words" }) {
-  return <View><Text style={styles.fieldLabel}>{label}</Text><TextInput value={value} onChangeText={onChangeText} placeholder={placeholder} placeholderTextColor={COLORS.mutedDark} multiline={multiline} keyboardType={keyboardType} autoCapitalize={autoCapitalize} style={[styles.input, multiline && styles.inputMultiline]} /></View>;
-}
-
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  content: { paddingTop: 12, paddingBottom: 28, gap: 20 },
-  topRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  back: { width: 38, height: 38, borderRadius: 14, backgroundColor: COLORS.cardBackground, alignItems: "center", justifyContent: "center" },
-  backGlyph: { color: COLORS.foreground, fontSize: 24, lineHeight: 24, fontWeight: "400", marginTop: -4 },
-  title: { color: COLORS.foreground, fontSize: 31, lineHeight: 34, fontWeight: "800", letterSpacing: -1 },
-  copy: { color: COLORS.muted, fontSize: 14, lineHeight: 20, maxWidth: 330 },
-  form: { gap: 16 },
-  fieldLabel: { color: COLORS.muted, fontSize: 11, fontWeight: "700", marginBottom: 8, textTransform: "uppercase", letterSpacing: 0.8 },
-  input: { minHeight: 52, borderRadius: 16, borderWidth: 1, borderColor: COLORS.border, backgroundColor: COLORS.cardBackground, color: COLORS.foreground, paddingHorizontal: 15, fontSize: 14 },
-  inputMultiline: { minHeight: 92, paddingTop: 14, textAlignVertical: "top" },
-  channelRow: { flexDirection: "row", gap: 8 },
-  channel: { flex: 1, minHeight: 44, borderRadius: 14, borderWidth: 1, borderColor: COLORS.border, alignItems: "center", justifyContent: "center", backgroundColor: COLORS.cardBackground },
-  channelActive: { borderColor: COLORS.accent, backgroundColor: COLORS.accent },
-  channelText: { color: COLORS.muted, fontSize: 12, fontWeight: "700" },
-  channelTextActive: { color: COLORS.background },
-  consentRow: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
-  checkbox: { width: 22, height: 22, borderRadius: 7, borderWidth: 1, borderColor: COLORS.mutedDark, alignItems: "center", justifyContent: "center" },
-  checkboxActive: { backgroundColor: COLORS.accent, borderColor: COLORS.accent },
-  consentText: { color: COLORS.muted, fontSize: 11, lineHeight: 16, flex: 1 },
-  error: { color: COLORS.error, fontSize: 12, lineHeight: 17 },
-  formHint: { color: COLORS.mutedDark, fontSize: 10, lineHeight: 14, textAlign: "center" },
-  successWrap: { flex: 1, justifyContent: "center", gap: 17 },
-  successMark: { width: 68, height: 68, borderRadius: 24, backgroundColor: COLORS.accent, alignItems: "center", justifyContent: "center", marginBottom: 4 },
-  successTitle: { color: COLORS.foreground, fontSize: 30, lineHeight: 34, fontWeight: "800", letterSpacing: -0.9 },
-  successCopy: { color: COLORS.muted, fontSize: 14, lineHeight: 21 },
-  idCard: { backgroundColor: COLORS.cardBackground, borderRadius: 17, borderWidth: 1, borderColor: COLORS.border, padding: 15, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  idLabel: { color: COLORS.muted, fontSize: 10, letterSpacing: 1.3, fontWeight: "800" },
-  idValue: { color: COLORS.accent, fontSize: 17, fontWeight: "800", letterSpacing: 1 },
-  closeLink: { alignItems: "center", paddingVertical: 6 },
-  closeLinkText: { color: COLORS.muted, fontSize: 13, fontWeight: "700" },
+  content: { paddingTop: 12, paddingBottom: 32 },
+  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
+  kicker: { ...TYPOGRAPHY.meta11, color: COLORS.muted, fontWeight: '500' },
+  closeHit: { width: 48, height: 48, alignItems: 'center', justifyContent: 'center' },
+  closeCircle: { width: 44, height: 44, borderRadius: 22, backgroundColor: COLORS.cardBackground, alignItems: 'center', justifyContent: 'center' },
+  title: { fontFamily: 'PlayfairDisplay_400Regular', color: COLORS.foreground, fontSize: 28, lineHeight: 34 },
+  copy: { ...TYPOGRAPHY.body15, color: COLORS.muted, marginTop: 8 },
+  form: { marginTop: 24, gap: 16 },
+  errorBox: { padding: 12, borderRadius: RADIUS.secondary, borderWidth: 1, borderColor: COLORS.error, backgroundColor: COLORS.cardBackground, flexDirection: 'row', gap: 8, alignItems: 'flex-start' },
+  errorText: { color: COLORS.error, fontSize: 11, lineHeight: 16, flex: 1 },
+  status: { color: COLORS.muted, fontSize: 11, lineHeight: 16 },
+  submitWrap: { marginTop: 8, gap: 12 },
+  pressed: { opacity: 0.7 },
+  modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.65)', justifyContent: 'center', padding: 20 },
+  modalCard: { backgroundColor: COLORS.cardBackground, borderRadius: RADIUS.sheet, borderCurve: 'continuous', padding: 20, maxHeight: '90%', gap: 16 },
+  modalHeader: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  modalTitle: { ...TYPOGRAPHY.display22, color: COLORS.foreground, flex: 1 },
+  modalBody: { gap: 12, paddingBottom: 16 },
+  demoNotice: { color: COLORS.error, fontSize: 13, lineHeight: 20 },
 });

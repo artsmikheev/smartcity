@@ -78,27 +78,27 @@ export const faqs = [
 ];
 
 // Explicit dev-preview data copied from restore-archive/supabase/seed.sql.
-// These are NOT live availability or prices. Concept images are not floor plans.
+// These are NOT live availability or prices. SVGs are schematic placeholders, not approved floor plans.
 export const catalogDemoApartments: import('../types/catalog').CatalogApartment[] = [
   {
     id: 'demo-k1-204', building_id: 'demo-k1', layout_id: 'one-room-38', number: '204',
     floor: 2, rooms: 1, area: 38, price: 11900000, currency: 'RUB', availability_status: 'reserved',
     availability_updated_at: null, price_updated_at: null, is_demo: true, published: true,
     created_at: '2026-11-05T00:00:00Z', updated_at: '2026-11-05T00:00:00Z',
-    plan_path: 'asset://reutov-urban-evening-concept.jpg', media_kind: 'concept',
+    plan_path: 'asset://plans/one-room-38.svg', media_kind: 'schematic', building_title: 'Корпус 1',
   },
   {
     id: 'demo-k2-603', building_id: 'demo-k2', layout_id: 'one-room-38', number: '603',
     floor: 6, rooms: 1, area: 38, price: 12400000, currency: 'RUB', availability_status: 'available',
     availability_updated_at: null, price_updated_at: null, is_demo: true, published: true,
     created_at: '2026-11-05T00:00:00Z', updated_at: '2026-11-05T00:00:00Z',
-    plan_path: 'asset://reutov-terrace-view-concept.jpg', media_kind: 'concept',
+    plan_path: 'asset://plans/one-room-38.svg', media_kind: 'schematic', building_title: 'Корпус 2',
   },
   {
     id: 'demo-k1-305', building_id: 'demo-k1', layout_id: 'two-room-55', number: '305',
     floor: 3, rooms: 2, area: 55, price: 15800000, currency: 'RUB', availability_status: 'sold',
     availability_updated_at: null, price_updated_at: null, is_demo: true, published: true,
     created_at: '2026-11-05T00:00:00Z', updated_at: '2026-11-05T00:00:00Z',
-    plan_path: 'asset://reutov-urban-day-concept.jpg', media_kind: 'concept',
+    plan_path: 'asset://plans/two-room-55.svg', media_kind: 'schematic', building_title: 'Корпус 1',
   },
 ];

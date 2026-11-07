@@ -1,131 +1,706 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { useEffect } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import {
+  FlatList,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
-import { COLORS } from "@/constants/theme";
-import { DEMO_NOTICE } from "@/constants/mock-data";
-import { Eyebrow, IconButton, PrimaryButton, SectionHeading, SignalDot, Tag } from "@/components/app-ui";
+import { ApartmentCard } from "@/components/apartment-card";
 import { ScreenContainer } from "@/components/screen-container";
+import { COLORS, SPACING, TYPOGRAPHY } from "@/constants/theme";
+import { useFavorites, useFavoritesStorageState } from "@/hooks/use-favorites";
 import { track } from "@/lib/telemetry";
+import type { CatalogApartment } from "@/types/catalog";
+
+// Titles and metadata copied from restore-archive/supabase/seed.sql, not a
+// network feed. Images are concept visualizations, never construction evidence.
+const promos = [
+  {
+    id: "family-discount",
+    title: "Семейный сценарий",
+    meta: "Демо-акция — условия уточняются.",
+    image: require("../../assets/images/reutov-terrace-view-concept.jpg"),
+  },
+  {
+    id: "mortgage-0",
+    title: "Ипотечная консультация",
+    meta: "Демо-карточка без указания банка-партнёра.",
+    image: require("../../assets/images/reutov-urban-day-concept.jpg"),
+  },
+];
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { preview } = useLocalSearchParams<{ preview?: string }>();
+  const previewContent = __DEV__ && preview === "content";
+  const favorites = useFavorites();
+  const persistence = useFavoritesStorageState();
+  const [dialog, setDialog] = useState<"notifications" | "promos" | null>(null);
 
   useEffect(() => {
     track("screen_view", { screen: "home" });
   }, []);
 
+  const openLayouts = () =>
+    router.push(
+      previewContent
+        ? { pathname: "/layouts", params: { preview: "content" } }
+        : "/layouts",
+    );
+  const openApartment = (item: CatalogApartment) =>
+    router.push({
+      pathname: "/apartment/[id]",
+      params: {
+        id: item.id,
+        ...(__DEV__ && item.is_demo ? { preview: "content" } : {}),
+      },
+    });
+
   return (
-    <ScreenContainer safeAreaClassName="bg-background" className="px-5">
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+    <ScreenContainer>
+      <ScrollView
+        testID="home-scroll"
+        showsVerticalScrollIndicator={false}
+        contentInsetAdjustmentBehavior="automatic"
+        contentContainerStyle={styles.content}
+      >
         <View style={styles.header}>
-          <View>
-            <Eyebrow color={COLORS.accent}>Наукоград / Реутов</Eyebrow>
-            <Text style={styles.wordmark}>УМНЫЙ ГОРОД</Text>
+          <View style={styles.headerText}>
+            <Text style={styles.eyebrow}>НАУКОГРАД / РЕУТОВ</Text>
+            <Text accessibilityRole="header" style={styles.title}>
+              Умный город
+            </Text>
           </View>
-          <IconButton icon="notifications-outline" label="Уведомления" onPress={() => router.push("/profile")} />
+          <Pressable
+            testID="home-notifications"
+            accessibilityRole="button"
+            accessibilityLabel="Уведомления"
+            onPress={() => setDialog("notifications")}
+            style={({ pressed }) => [
+              styles.notificationHit,
+              pressed && styles.pressed,
+            ]}
+          >
+            <View style={styles.notificationCircle}>
+              <Ionicons
+                name="notifications-outline"
+                size={22}
+                color={COLORS.foreground}
+                accessible={false}
+              />
+            </View>
+          </Pressable>
         </View>
 
-        <View style={styles.hero}>
-          <View style={styles.heroGrid}>
-            <View style={styles.heroLine} />
-            <View style={styles.heroLineShort} />
-          </View>
-          <Tag tone="lime">Дом для новых планов</Tag>
-          <Text style={styles.heroTitle}>Город, который{`\n`}движется вместе с вами.</Text>
-          <Text style={styles.heroCopy}>Современная среда, архитектура и понятный следующий шаг — в одном месте.</Text>
-          <PrimaryButton label="Подобрать планировку" onPress={() => { track("cta_tap", { cta: "layouts" }); router.push("/layouts"); }} />
-          <Text style={styles.disclaimer}>{DEMO_NOTICE}</Text>
-        </View>
-
-        <View style={styles.statusCard}>
-          <View style={styles.statusTop}>
-            <View style={styles.statusTitleRow}><SignalDot /><Text style={styles.statusTitle}>Статус проекта</Text></View>
-            <Text style={styles.statusDate}>обновляется</Text>
-          </View>
-          <Text style={styles.statusHeadline}>Материалы собираются в один контур</Text>
-          <Text style={styles.statusCopy}>Проверенные новости, планировки и ход строительства появятся здесь без лишнего шума.</Text>
-          <View style={styles.statusRail}>
-            <View style={styles.railStep}><View style={[styles.railDot, styles.railDotActive]} /><Text style={styles.railLabel}>Контур</Text></View>
-            <View style={styles.railLine} />
-            <View style={styles.railStep}><View style={styles.railDot} /><Text style={styles.railLabel}>Материалы</Text></View>
-            <View style={styles.railLine} />
-            <View style={styles.railStep}><View style={styles.railDot} /><Text style={styles.railLabel}>Обновление</Text></View>
+        <View testID="home-hero" style={styles.hero}>
+          <Image
+            source={require("../../assets/images/reutov-urban-day-concept.jpg")}
+            style={StyleSheet.absoluteFill}
+            contentFit="cover"
+            transition={0}
+            accessibilityLabel="Концептная визуализация проекта в Реутове"
+          />
+          <LinearGradient
+            colors={[`${COLORS.background}00`, COLORS.background]}
+            locations={[0.3, 1]}
+            style={StyleSheet.absoluteFill}
+            pointerEvents="none"
+          />
+          <View style={styles.heroText}>
+            <Text accessibilityRole="header" style={styles.heroTitle}>
+              Дом для новых планов
+            </Text>
+            <Text style={styles.heroSubtitle}>
+              Современная среда в Наукограде
+            </Text>
           </View>
         </View>
+        <Text testID="home-hero-disclaimer" style={styles.disclaimer}>
+          Визуализация. Не является публичной офертой.
+        </Text>
 
-        <SectionHeading title="Следующий шаг" />
-        <View style={styles.actionGrid}>
-          <QuickAction icon="call-outline" label="Получить консультацию" onPress={() => router.push({ pathname: "/lead", params: { type: "consultation" } })} />
-          <QuickAction icon="document-text-outline" label="Получить планировку" onPress={() => router.push("/layouts")} />
+        <View style={styles.quickActions}>
+          <QuickAction
+            testID="home-quick-layouts"
+            icon="grid-outline"
+            label="Подобрать квартиру"
+            onPress={openLayouts}
+          />
+          <QuickAction
+            testID="home-quick-price"
+            icon="document-text-outline"
+            label="Узнать условия"
+            onPress={() =>
+              router.push({
+                pathname: "/lead",
+                params: { type: "price_request" },
+              })
+            }
+          />
+          <QuickAction
+            testID="home-quick-call"
+            icon="call-outline"
+            label="Заказать звонок"
+            onPress={() =>
+              router.push({
+                pathname: "/lead",
+                params: { type: "manager_call" },
+              })
+            }
+          />
         </View>
 
-        <SectionHeading title="Коротко о проекте" action="Подробнее" onAction={() => router.push("/about")} />
-        <View style={styles.aboutCard}>
-          <View style={styles.aboutIcon}><Ionicons name="compass-outline" size={23} color={COLORS.accent} /></View>
-          <View style={styles.aboutText}>
-            <Text style={styles.aboutTitle}>Новая доминанта Реутова</Text>
-            <Text style={styles.aboutCopy}>Технологичность, человеческий масштаб и продуманная городская среда.</Text>
+        {!favorites.hydrated && (
+          <Text
+            testID="home-favorites-loading"
+            accessibilityLiveRegion="polite"
+            style={styles.loading}
+          >
+            Загружаем избранное…
+          </Text>
+        )}
+        {persistence.error && (
+          <View
+            testID="home-favorites-storage-error"
+            style={styles.storageNotice}
+            accessibilityLiveRegion="polite"
+          >
+            <Ionicons
+              name="alert-circle-outline"
+              size={20}
+              color={COLORS.error}
+              accessible={false}
+            />
+            <View style={styles.noticeBody}>
+              <Text style={styles.noticeCopy}>
+                Не удалось{" "}
+                {persistence.error === "read" ? "загрузить" : "сохранить"}{" "}
+                избранное на устройстве. Изменения доступны в памяти приложения.
+              </Text>
+              <Pressable
+                testID="home-favorites-retry"
+                accessibilityRole="button"
+                accessibilityLabel="Повторить сохранение избранного на устройстве"
+                accessibilityState={{ disabled: persistence.recovering }}
+                disabled={persistence.recovering}
+                onPress={() => {
+                  void persistence.retry();
+                }}
+                style={styles.noticeAction}
+              >
+                <Text style={styles.actionText}>
+                  {persistence.recovering ? "Повторяем…" : "Повторить"}
+                </Text>
+              </Pressable>
+            </View>
           </View>
-          <Ionicons name="arrow-up-right-box" size={19} color={COLORS.muted} />
+        )}
+
+        {favorites.apartments.length > 0 && (
+          <View testID="home-favorites-section" style={styles.section}>
+            <Heading
+              title="Избранное"
+              action="Все"
+              testID="home-favorites-all"
+              onAction={() => router.push("/favorites")}
+            />
+            <FlatList
+              testID="home-favorites-list"
+              horizontal
+              data={favorites.apartments}
+              extraData={favorites.apartments}
+              keyExtractor={(item) => item.id}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.favoriteCarousel}
+              ItemSeparatorComponent={() => (
+                <View style={styles.favoriteSeparator} />
+              )}
+              renderItem={({ item }) => (
+                <ApartmentCard
+                  apartment={item}
+                  variant="compact"
+                  favorited={favorites.isFavorite(item.id)}
+                  onToggleFavorite={() => favorites.toggle(item)}
+                  onPress={() => openApartment(item)}
+                />
+              )}
+            />
+          </View>
+        )}
+
+        <View testID="home-construction-section" style={styles.section}>
+          <Heading
+            title="Ход строительства"
+            action="Все отчёты"
+            testID="home-construction-all"
+            onAction={() => router.push("/construction")}
+          />
+          <Pressable
+            testID="home-construction-report"
+            accessibilityRole="button"
+            accessibilityLabel="Октябрь 2026. Демо-отчёт. Открыть ход строительства"
+            onPress={() => router.push("/construction")}
+            style={({ pressed }) => [
+              styles.constructionCard,
+              pressed && styles.pressed,
+            ]}
+          >
+            <Image
+              source={require("../../assets/images/reutov-urban-evening-concept.jpg")}
+              style={styles.constructionImage}
+              contentFit="cover"
+              transition={0}
+              accessibilityLabel="Концептная визуализация, не фотоотчёт стройки"
+            />
+            <View style={styles.constructionText}>
+              <Text style={styles.constructionTitle}>Октябрь 2026</Text>
+              <Text style={styles.metadata}>
+                Демо-отчёт. Дата обновления не подтверждена.
+              </Text>
+            </View>
+          </Pressable>
         </View>
 
-        <Pressable style={({ pressed }) => [styles.newsCard, pressed && styles.pressed]} onPress={() => router.push("/contacts")}>
-          <View style={styles.newsTop}><Eyebrow color={COLORS.accent}>На связи</Eyebrow><Ionicons name="arrow-forward" size={17} color={COLORS.accent} /></View>
-          <Text style={styles.newsTitle}>Хотите узнать первым?</Text>
-          <Text style={styles.newsCopy}>Оставьте контакт — команда проекта вернётся с подтверждёнными материалами.</Text>
-        </Pressable>
+        <View testID="home-promos-section" style={styles.section}>
+          <Heading
+            title="Акции"
+            action="Все"
+            testID="home-promos-all"
+            onAction={() => setDialog("promos")}
+          />
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.carousel}
+          >
+            {promos.map((promo) => (
+              <Pressable
+                testID={`home-promo-${promo.id}`}
+                key={promo.id}
+                accessibilityRole="button"
+                accessibilityLabel={`${promo.title}. ${promo.meta} Узнать условия`}
+                onPress={() =>
+                  router.push({
+                    pathname: "/lead",
+                    params: { type: "mortgage" },
+                  })
+                }
+                style={({ pressed }) => [
+                  styles.promoCard,
+                  pressed && styles.pressed,
+                ]}
+              >
+                <Image
+                  source={promo.image}
+                  style={styles.promoImage}
+                  contentFit="cover"
+                  transition={0}
+                  accessible={false}
+                />
+                <View style={styles.promoText}>
+                  <Text style={styles.promoTitle}>{promo.title}</Text>
+                  <Text style={styles.metadata}>{promo.meta}</Text>
+                </View>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
+        <Text testID="home-demo-footer" style={styles.demoFooter}>
+          Демо-материалы проекта. Концептные изображения; акции и отчёт из
+          демонстрационного seed. Цены, наличие и условия уточняются командой
+          проекта.
+        </Text>
       </ScrollView>
+
+      {dialog !== null && (
+        <Modal
+          visible
+          transparent
+          animationType="none"
+          onRequestClose={() => setDialog(null)}
+        >
+          <View style={styles.modalBackdrop}>
+            <Pressable
+              style={StyleSheet.absoluteFill}
+              accessible={false}
+              focusable={false}
+              onPress={() => setDialog(null)}
+            />
+            <View
+              testID={
+                dialog === "notifications"
+                  ? "home-notifications-modal"
+                  : "home-promos-modal"
+              }
+              accessibilityViewIsModal
+              style={styles.modalCard}
+            >
+              <View style={styles.modalHeader}>
+                <Text accessibilityRole="header" style={styles.sectionTitle}>
+                  {dialog === "notifications" ? "Уведомления" : "Акции проекта"}
+                </Text>
+                <Pressable
+                  testID="home-modal-close"
+                  accessibilityRole="button"
+                  accessibilityLabel="Закрыть"
+                  onPress={() => setDialog(null)}
+                  style={styles.modalClose}
+                >
+                  <Ionicons
+                    name="close-outline"
+                    size={24}
+                    color={COLORS.foreground}
+                    accessible={false}
+                  />
+                </Pressable>
+              </View>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <Text style={styles.modalCopy}>
+                  {dialog === "notifications"
+                    ? "Уведомления пока не настроены. Приложение не запрашивает разрешение и не отправляет push-уведомления. Подтверждённые материалы можно уточнить у менеджера."
+                    : "Здесь показаны две демо-карточки из материалов проекта. Актуальность акций, банк и условия не подтверждены. Уточните их у менеджера."}
+                </Text>
+              </ScrollView>
+              <Pressable
+                testID="home-modal-contact"
+                accessibilityRole="button"
+                onPress={() => {
+                  setDialog(null);
+                  router.push({
+                    pathname: "/lead",
+                    params: {
+                      type: dialog === "promos" ? "mortgage" : "manager_call",
+                    },
+                  });
+                }}
+                style={({ pressed }) => [
+                  styles.secondaryButton,
+                  pressed && styles.pressed,
+                ]}
+              >
+                <Text style={styles.secondaryLabel}>
+                  {dialog === "promos" ? "Узнать условия" : "Заказать звонок"}
+                </Text>
+                <Ionicons
+                  name="arrow-forward"
+                  size={18}
+                  color={COLORS.foreground}
+                  accessible={false}
+                />
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      )}
     </ScreenContainer>
   );
 }
 
-function QuickAction({ icon, label, onPress }: { icon: keyof typeof Ionicons.glyphMap; label: string; onPress: () => void }) {
+function Heading({
+  title,
+  action,
+  testID,
+  onAction,
+}: {
+  title: string;
+  action: string;
+  testID: string;
+  onAction(): void;
+}) {
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.quickAction, pressed && styles.pressed]}>
-      <Ionicons name={icon} size={21} color={COLORS.accent} />
+    <View style={styles.sectionHeading}>
+      <Text accessibilityRole="header" style={styles.sectionTitle}>
+        {title}
+      </Text>
+      <Pressable
+        testID={testID}
+        accessibilityRole="button"
+        accessibilityLabel={`${action}: ${title.toLowerCase()}`}
+        onPress={onAction}
+        style={({ pressed }) => [
+          styles.headingAction,
+          pressed && styles.pressed,
+        ]}
+      >
+        <Text style={styles.actionText}>{action}</Text>
+        <Ionicons
+          name="arrow-forward"
+          size={15}
+          color={COLORS.accent}
+          accessible={false}
+        />
+      </Pressable>
+    </View>
+  );
+}
+
+function QuickAction({
+  icon,
+  label,
+  testID,
+  onPress,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  testID: string;
+  onPress(): void;
+}) {
+  return (
+    <Pressable
+      testID={testID}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      style={({ pressed }) => [styles.quickAction, pressed && styles.pressed]}
+    >
+      <Ionicons
+        name={icon}
+        size={24}
+        color={COLORS.accent}
+        accessible={false}
+      />
       <Text style={styles.quickLabel}>{label}</Text>
-      <Ionicons name="arrow-up-right-box" size={16} color={COLORS.muted} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  content: { paddingTop: 13, paddingBottom: 130, gap: 20 },
-  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 5 },
-  wordmark: { color: COLORS.foreground, fontSize: 17, letterSpacing: 2.5, fontWeight: "800", marginTop: 5 },
-  hero: { overflow: "hidden", borderRadius: 28, backgroundColor: COLORS.cardBackground, padding: 21, paddingTop: 22, minHeight: 315, justifyContent: "flex-end", borderWidth: 1, borderColor: COLORS.border },
-  heroGrid: { position: "absolute", right: -14, top: 0, width: 190, height: 200, transform: [{ rotate: "-12deg" }] },
-  heroLine: { position: "absolute", top: 43, left: 0, width: 220, height: 1, backgroundColor: COLORS.accent + "55" },
-  heroLineShort: { position: "absolute", top: 91, left: 32, width: 156, height: 1, backgroundColor: COLORS.accent + "33" },
-  heroTitle: { color: COLORS.foreground, fontSize: 32, lineHeight: 35, letterSpacing: -1.1, fontWeight: "800", marginTop: 18, marginBottom: 10 },
-  heroCopy: { color: COLORS.muted, fontSize: 14, lineHeight: 21, maxWidth: 290, marginBottom: 18 },
-  disclaimer: { color: COLORS.mutedDark, fontSize: 10, lineHeight: 14, marginTop: 12 },
-  statusCard: { backgroundColor: COLORS.cardBackground, borderRadius: 22, padding: 18, borderWidth: 1, borderColor: COLORS.border },
-  statusTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 14 },
-  statusTitleRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  statusTitle: { color: COLORS.foreground, fontSize: 13, fontWeight: "800" },
-  statusDate: { color: COLORS.mutedDark, fontSize: 11, textTransform: "uppercase", letterSpacing: 0.7 },
-  statusHeadline: { color: COLORS.foreground, fontSize: 20, lineHeight: 24, fontWeight: "800", letterSpacing: -0.5, marginBottom: 7 },
-  statusCopy: { color: COLORS.muted, fontSize: 13, lineHeight: 19 },
-  statusRail: { flexDirection: "row", alignItems: "center", marginTop: 21 },
-  railStep: { alignItems: "center", gap: 7 },
-  railDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: COLORS.mutedDark },
-  railDotActive: { backgroundColor: COLORS.accent, shadowColor: COLORS.accent, shadowOpacity: 0.7, shadowRadius: 6 },
-  railLine: { flex: 1, height: 1, marginHorizontal: 8, backgroundColor: COLORS.border },
-  railLabel: { color: COLORS.muted, fontSize: 9, textTransform: "uppercase", letterSpacing: 0.5 },
-  actionGrid: { flexDirection: "row", gap: 10 },
-  quickAction: { flex: 1, minHeight: 108, padding: 14, backgroundColor: COLORS.cardBackground, borderRadius: 18, borderWidth: 1, borderColor: COLORS.border, justifyContent: "space-between" },
-  quickLabel: { color: COLORS.foreground, fontSize: 13, lineHeight: 17, fontWeight: "700", maxWidth: 110 },
-  aboutCard: { minHeight: 98, backgroundColor: COLORS.cardBackground, borderRadius: 18, borderWidth: 1, borderColor: COLORS.border, padding: 15, flexDirection: "row", alignItems: "center", gap: 12 },
-  aboutIcon: { width: 44, height: 44, borderRadius: 15, backgroundColor: COLORS.background, alignItems: "center", justifyContent: "center" },
-  aboutText: { flex: 1 },
-  aboutTitle: { color: COLORS.foreground, fontSize: 15, fontWeight: "800", marginBottom: 5 },
-  aboutCopy: { color: COLORS.muted, fontSize: 12, lineHeight: 17 },
-  newsCard: { backgroundColor: COLORS.foreground, borderRadius: 22, padding: 18, minHeight: 126 },
-  newsTop: { flexDirection: "row", justifyContent: "space-between", marginBottom: 16 },
-  newsTitle: { color: COLORS.background, fontSize: 20, fontWeight: "800", letterSpacing: -0.4, marginBottom: 6 },
-  newsCopy: { color: COLORS.background + "AA", fontSize: 13, lineHeight: 18, maxWidth: 280 },
-  pressed: { opacity: 0.75, transform: [{ scale: 0.985 }] },
+  content: { paddingTop: SPACING.xl, paddingBottom: 130 },
+  header: {
+    marginHorizontal: SPACING.xl,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: SPACING.sm,
+  },
+  headerText: { flex: 1, minWidth: 0 },
+  eyebrow: { ...TYPOGRAPHY.meta11, color: COLORS.muted },
+  title: {
+    ...TYPOGRAPHY.display36,
+    color: COLORS.foreground,
+    marginTop: SPACING.xs,
+  },
+  notificationHit: { width: 48, height: 48, padding: 2 },
+  notificationCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: COLORS.cardBackground,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  hero: {
+    height: 260,
+    borderRadius: 20,
+    borderCurve: "continuous",
+    marginHorizontal: SPACING.xl,
+    marginTop: SPACING.xxl,
+    backgroundColor: COLORS.cardBackground,
+    overflow: "hidden",
+    justifyContent: "flex-end",
+  },
+  heroText: { padding: SPACING.xl, gap: SPACING.xs },
+  heroTitle: {
+    ...TYPOGRAPHY.display32,
+    fontSize: 28,
+    lineHeight: 32,
+    color: COLORS.foreground,
+  },
+  heroSubtitle: { ...TYPOGRAPHY.body15, color: COLORS.muted },
+  disclaimer: {
+    fontSize: 11,
+    lineHeight: 16,
+    fontStyle: "italic",
+    color: COLORS.muted,
+    marginTop: SPACING.sm,
+    marginHorizontal: SPACING.xl,
+  },
+  quickActions: {
+    flexDirection: "row",
+    gap: SPACING.sm,
+    marginTop: SPACING.xxxl,
+    marginHorizontal: SPACING.xl,
+  },
+  quickAction: {
+    flex: 1,
+    minWidth: 0,
+    minHeight: 88,
+    borderRadius: 12,
+    borderCurve: "continuous",
+    backgroundColor: COLORS.cardBackground,
+    padding: SPACING.sm,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: SPACING.sm,
+  },
+  quickLabel: {
+    fontSize: 11,
+    lineHeight: 14,
+    fontWeight: "400",
+    color: COLORS.foreground,
+    textAlign: "center",
+  },
+  loading: {
+    ...TYPOGRAPHY.body13,
+    color: COLORS.muted,
+    marginHorizontal: SPACING.xl,
+    marginTop: SPACING.lg,
+  },
+  storageNotice: {
+    marginHorizontal: SPACING.xl,
+    marginTop: SPACING.lg,
+    padding: SPACING.md,
+    gap: SPACING.sm,
+    flexDirection: "row",
+    backgroundColor: COLORS.cardBackground,
+    borderRadius: 12,
+    borderCurve: "continuous",
+  },
+  noticeBody: { flex: 1 },
+  noticeCopy: { ...TYPOGRAPHY.body13, color: COLORS.muted },
+  noticeAction: {
+    minHeight: 48,
+    justifyContent: "center",
+    alignSelf: "flex-start",
+  },
+  section: { marginTop: SPACING.xxxl },
+  sectionHeading: {
+    marginHorizontal: SPACING.xl,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: SPACING.sm,
+    marginBottom: SPACING.md,
+  },
+  sectionTitle: {
+    ...TYPOGRAPHY.display22,
+    color: COLORS.foreground,
+    flexShrink: 1,
+  },
+  headingAction: {
+    minWidth: 48,
+    minHeight: 48,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: SPACING.xs,
+  },
+  actionText: { ...TYPOGRAPHY.body13, color: COLORS.accent },
+  carousel: {
+    paddingHorizontal: SPACING.xl,
+    paddingBottom: SPACING.xs,
+    gap: SPACING.md,
+  },
+  favoriteCarousel: {
+    paddingHorizontal: SPACING.xl,
+    paddingBottom: SPACING.xs,
+  },
+  favoriteSeparator: { width: SPACING.md },
+  constructionCard: {
+    minHeight: 120,
+    marginHorizontal: SPACING.xl,
+    borderRadius: 16,
+    borderCurve: "continuous",
+    backgroundColor: COLORS.cardBackground,
+    flexDirection: "row",
+    alignItems: "center",
+    padding: SPACING.md,
+    gap: SPACING.md,
+  },
+  constructionImage: {
+    width: 96,
+    height: 96,
+    borderRadius: 12,
+    borderCurve: "continuous",
+  },
+  constructionText: { flex: 1, minWidth: 0, gap: SPACING.sm },
+  constructionTitle: {
+    ...TYPOGRAPHY.body15,
+    color: COLORS.foreground,
+    fontWeight: "500",
+  },
+  metadata: {
+    fontSize: 11,
+    lineHeight: 14,
+    fontWeight: "400",
+    color: COLORS.muted,
+  },
+  promoCard: { width: 260, minHeight: 200 },
+  promoImage: {
+    width: 260,
+    height: 120,
+    borderRadius: 16,
+    borderCurve: "continuous",
+  },
+  promoText: { marginTop: SPACING.md, gap: SPACING.xs },
+  promoTitle: {
+    ...TYPOGRAPHY.display22,
+    fontSize: 18,
+    lineHeight: 22,
+    color: COLORS.foreground,
+  },
+  demoFooter: {
+    fontSize: 11,
+    lineHeight: 16,
+    color: COLORS.muted,
+    textAlign: "center",
+    marginHorizontal: SPACING.xl,
+    marginTop: SPACING.xxxl,
+  },
+  modalBackdrop: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: `${COLORS.cardDeep}CC`,
+    padding: SPACING.xl,
+  },
+  modalCard: {
+    width: "100%",
+    maxWidth: 440,
+    maxHeight: "80%",
+    padding: SPACING.xl,
+    gap: SPACING.xxl,
+    backgroundColor: COLORS.cardBackground,
+    borderRadius: 24,
+    borderCurve: "continuous",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: SPACING.sm,
+  },
+  modalClose: {
+    width: 48,
+    height: 48,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalCopy: { ...TYPOGRAPHY.body15, color: COLORS.muted },
+  secondaryButton: {
+    minHeight: 52,
+    borderRadius: 12,
+    borderCurve: "continuous",
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    paddingHorizontal: SPACING.lg,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: SPACING.sm,
+  },
+  secondaryLabel: {
+    ...TYPOGRAPHY.body15,
+    fontWeight: "600",
+    color: COLORS.foreground,
+  },
+  pressed: { opacity: 0.8 },
 });

@@ -1,0 +1,90 @@
+[
+  {
+    "screen": "home",
+    "text": "Дом для новых планов",
+    "fg": [
+      237,
+      234,
+      228
+    ],
+    "worst_background": [
+      121,
+      116,
+      109
+    ],
+    "sample_at": [
+      186,
+      287
+    ],
+    "minimum_ratio": 3.859,
+    "threshold": 3,
+    "pass": true,
+    "method": "Conservative minimum across full label box with labels hidden; original pixels not recomposed."
+  },
+  {
+    "screen": "home",
+    "text": "Современная среда в Наукограде",
+    "fg": [
+      188,
+      185,
+      183
+    ],
+    "worst_background": [
+      77,
+      73,
+      68
+    ],
+    "sample_at": [
+      75,
+      320
+    ],
+    "minimum_ratio": 4.575,
+    "threshold": 4.5,
+    "pass": true,
+    "method": "Conservative minimum across full label box with labels hidden; original pixels not recomposed."
+  },
+  {
+    "screen": "detail",
+    "text": "3 ЭТАЖ · КОРПУС 1 · 55 М²",
+    "fg": [
+      188,
+      185,
+      183
+    ],
+    "worst_background": [
+      35,
+      34,
+      33
+    ],
+    "sample_at": [
+      79,
+      336
+    ],
+    "minimum_ratio": 8.139,
+    "threshold": 4.5,
+    "pass": true,
+    "method": "Conservative minimum across full label box with labels hidden; original pixels not recomposed."
+  },
+  {
+    "screen": "detail",
+    "text": "2-комнатная квартира",
+    "fg": [
+      237,
+      234,
+      228
+    ],
+    "worst_background": [
+      33,
+      32,
+      31
+    ],
+    "sample_at": [
+      72,
+      355
+    ],
+    "minimum_ratio": 13.547,
+    "threshold": 3,
+    "pass": true,
+    "method": "Conservative minimum across full label box with labels hidden; original pixels not recomposed."
+  }
+]

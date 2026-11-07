@@ -1,0 +1,65 @@
+import { chromium } from '/tmp/smartcity-r12-tools/node_modules/playwright/index.mjs';
+import { writeFile } from 'node:fs/promises';
+const out = '/home/ubuntu/recovery-r1-4';
+const browser = await chromium.launch({ headless: true });
+const context = await browser.newContext({ viewport:{width:375,height:812},deviceScaleFactor:1 });
+const page = await context.newPage();
+const errors=[];
+page.on('pageerror',e=>errors.push(e.message));
+page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
+async function goto(path,selector){
+ await page.goto('http://127.0.0.1:8081'+path,{waitUntil:'networkidle',timeout:120000});
+ await page.getByTestId(selector).waitFor({timeout:60000});
+ await page.evaluate(()=>document.fonts.ready);
+}
+async function snap(name){await page.screenshot({path:`${out}/${name}-375x812.png`});}
+const check=(ok,why)=>{if(!ok)throw new Error(why);};
+async function geometry(){return page.evaluate(()=>{
+ const ids=['apartment-card-demo-k1-204','card-clip-demo-k1-204','card-heart-demo-k1-204','card-heart-circle-demo-k1-204','card-title-demo-k1-204','card-price-demo-k1-204','card-media-demo-k1-204','floating-tab-bar'];
+ return Object.fromEntries(ids.map(id=>{const e=document.querySelector(`[data-testid="${id}"]`), r=e.getBoundingClientRect(),s=getComputedStyle(e);return [id,{x:r.x,y:r.y,width:r.width,height:r.height,fontSize:s.fontSize,shadow:s.boxShadow,border:s.border,bg:s.backgroundColor,padding:s.padding,overflow:s.overflow}];}));
+});}
+await goto('/layouts?preview=content','apartment-card-demo-k1-204');
+await page.locator('[data-testid="card-media-demo-k1-204"] svg').waitFor();
+await snap('catalog-after');
+const geometryCatalog = await geometry();
+check(geometryCatalog['apartment-card-demo-k1-204'].height===160,'Card height160');
+check(geometryCatalog['apartment-card-demo-k1-204'].shadow==='rgba(0, 0, 0, 0.55) 0px 10px 24px 0px','Shadow exact/one');
+check(geometryCatalog['card-heart-demo-k1-204'].width===48,'Heart48 hitarea');
+check(geometryCatalog['card-heart-circle-demo-k1-204'].bg==='rgba(28, 27, 26, 0.85)','Heart material');
+check(geometryCatalog['card-price-demo-k1-204'].fontSize==='22px','Price22');
+await page.getByTestId('card-heart-demo-k1-204').click();
+check((await page.getByTestId('card-heart-demo-k1-204').getAttribute('aria-pressed'))==='true','Selectedfavorite');
+check(page.url().includes('/layouts'),'Heart independent action');
+await page.getByRole('button',{name:'Чертежи',exact:true}).click();
+check(await page.locator('[data-testid^="apartment-card-"]').count()===3,'3 SVGs not empty blueprints');
+await snap('catalog-blueprints');
+await page.getByTestId('catalog-footer').scrollIntoViewIfNeeded();
+await snap('catalog-footer');
+const footer=await page.getByTestId('catalog-footer').boundingBox();const pill=await page.getByTestId('floating-tab-bar').boundingBox();check(footer.y+footer.height<pill.y,'Footerclearpill');
+await goto('/','home-hero');
+await page.getByTestId('home-favorites-section').waitFor();
+await snap('home-after');
+await page.getByTestId('home-favorites-section').scrollIntoViewIfNeeded();await snap('home-favorites');
+await page.getByTestId('home-promos-section').scrollIntoViewIfNeeded();await snap('home-sections');
+await goto('/favorites','apartment-card-demo-k1-204');await snap('favorites-after');
+await page.getByTestId('card-heart-demo-k1-204').click();await page.getByTestId('favorites-empty').waitFor();await snap('favorites-empty');
+await goto('/','home-hero');check(!(await page.getByTestId('home-favorites-section').count()),'Home hides emptyfavorites');
+await goto('/apartment/demo-k1-305?preview=content','detail-content');await snap('detail-after');
+const detailHero=await page.getByTestId('detail-hero').boundingBox();check(detailHero.height===447,'Detailhero55% of812');
+const detailprice=await page.getByTestId('detail-price').textContent();check(detailprice.includes('15 800 000'),'Seedprice');check((await page.getByTestId('detail-status').textContent())==='Продано','Seedstatusnotinvented');
+check(!(await page.getByTestId('floating-tab-bar').isVisible()),'Detailnobar');
+await page.getByTestId('detail-plan').scrollIntoViewIfNeeded();await snap('detail-plan');
+await page.getByTestId('detail-related').scrollIntoViewIfNeeded();await snap('detail-related');
+check((await page.getByTestId('detail-related').locator('[data-testid^="apartment-card-"]').count())===3,'Related3');
+const compact=await page.getByTestId('detail-related').locator('[data-testid^="apartment-card-"]').first().boundingBox();check(compact.width===280&&compact.height===140,'Compact280x140');
+await page.getByTestId('detail-heart').click();
+await goto('/favorites','apartment-card-demo-k1-305');check((await page.getByTestId('card-heart-demo-k1-305').getAttribute('aria-pressed'))==='true','Detailheart favoritesync');
+await page.reload({waitUntil:'networkidle'});await page.getByTestId('apartment-card-demo-k1-305').waitFor();check((await page.getByTestId('favorites-count').textContent()).includes('1'),'Persistreload');
+await goto('/apartment/missing?preview=content','detail-not-found');await snap('detail-not-found');
+await goto('/layouts?preview=loading','catalog-loading');await snap('catalog-loading');check((await page.locator('[data-testid^="catalog-skeleton-"]').count())===3,'Skeleton3');
+await goto('/layouts?preview=empty','catalog-empty');await snap('catalog-empty');
+await goto('/layouts','catalog-error');await snap('catalog-error');
+check(errors.length===0,errors.join('\n'));
+await writeFile(`${out}/core-measurements.json`,JSON.stringify({geometryCatalog,footer,pill,detailHero,compact,errors,checks:['catalog3SVGschematics','exactcarddimensions','heartcontrastmaterial','selectedstate','blueprintscontent','footerclearance','favoritescrossscreen','favoritepersistence','homesections','hero55percent','related3','notfound','4catalogstates']},null,2)+'\n');
+console.log('Core production screenshots / geometry / local persistence checks PASS');
+await browser.close();

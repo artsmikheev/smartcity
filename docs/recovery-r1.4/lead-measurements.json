@@ -1,0 +1,83 @@
+{
+  "controls": {
+    "inputname": {
+      "width": 335,
+      "height": 52,
+      "fontSize": "16px",
+      "radius": "12px",
+      "border": "1px solid rgb(154, 152, 150)",
+      "role": null
+    },
+    "inputphone": {
+      "width": 335,
+      "height": 52,
+      "fontSize": "16px",
+      "radius": "12px",
+      "border": "1px solid rgb(154, 152, 150)",
+      "role": null
+    },
+    "lead-channel-call": {
+      "width": 163.5,
+      "height": 56,
+      "fontSize": "16px",
+      "radius": "12px",
+      "border": "1px solid rgb(184, 143, 0)",
+      "role": "radio"
+    },
+    "lead-channel-telegram": {
+      "width": 163.5,
+      "height": 56,
+      "fontSize": "16px",
+      "radius": "12px",
+      "border": "1px solid rgb(154, 152, 150)",
+      "role": "radio"
+    },
+    "lead-consent": {
+      "width": 48,
+      "height": 48,
+      "fontSize": "16px",
+      "radius": "0px",
+      "border": "0px solid rgb(0, 0, 0)",
+      "role": "checkbox"
+    },
+    "lead-consent-link": {
+      "width": 116.421875,
+      "height": 48,
+      "fontSize": "16px",
+      "radius": "0px",
+      "border": "0px solid rgb(0, 0, 0)",
+      "role": "button"
+    },
+    "lead-submit": {
+      "width": 335,
+      "height": 52,
+      "fontSize": "16px",
+      "radius": "999px",
+      "border": "0px solid rgb(0, 0, 0)",
+      "role": "button"
+    },
+    "lead-close": {
+      "width": 48,
+      "height": 48,
+      "fontSize": "16px",
+      "radius": "0px",
+      "border": "0px solid rgb(0, 0, 0)",
+      "role": "button"
+    }
+  },
+  "rpcRequests": [],
+  "errors": [],
+  "checks": [
+    "defaultform",
+    "invalidaria",
+    "RUmaskpaste",
+    "radioselect",
+    "consentdocumentunavailable",
+    "preservedinputs",
+    "submittingdisabled",
+    "demo successclear",
+    "URLproofrejected",
+    "finishhome",
+    "noRPC"
+  ]
+}

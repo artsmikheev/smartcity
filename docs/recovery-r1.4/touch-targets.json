@@ -1,0 +1,504 @@
+[
+  {
+    "screen": "home",
+    "rows": [
+      {
+        "label": "Уведомления",
+        "id": "home-notifications",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Подобрать квартиру",
+        "id": "home-quick-layouts",
+        "width": 106.328125,
+        "height": 88,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Узнать условия",
+        "id": "home-quick-price",
+        "width": 106.34375,
+        "height": 88,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Заказать звонок",
+        "id": "home-quick-call",
+        "width": 106.328125,
+        "height": 88,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Все отчёты: ход строительства",
+        "id": "home-construction-all",
+        "width": 87.21875,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Октябрь 2026. Демо-отчёт. Открыть ход строительства",
+        "id": "home-construction-report",
+        "width": 335,
+        "height": 120,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Все: акции",
+        "id": "home-promos-all",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Семейный сценарий. Демо-акция — условия уточняются. Узнать условия",
+        "id": "home-promo-family-discount",
+        "width": 260,
+        "height": 200,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Ипотечная консультация. Демо-карточка без указания банка-партнёра. Узнать условия",
+        "id": "home-promo-mortgage-0",
+        "width": 260,
+        "height": 200,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Главная",
+        "id": "tab-index",
+        "width": 83.75,
+        "height": 64,
+        "role": "tab",
+        "pass": true
+      },
+      {
+        "label": "Планировки",
+        "id": "tab-layouts",
+        "width": 83.75,
+        "height": 64,
+        "role": "tab",
+        "pass": true
+      },
+      {
+        "label": "Стройка",
+        "id": "tab-construction",
+        "width": 83.75,
+        "height": 64,
+        "role": "tab",
+        "pass": true
+      },
+      {
+        "label": "Профиль",
+        "id": "tab-profile",
+        "width": 83.75,
+        "height": 64,
+        "role": "tab",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "screen": "catalog",
+    "rows": [
+      {
+        "label": "Фильтры",
+        "id": "catalog-filter",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Квартиры",
+        "id": null,
+        "width": 62.78125,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Чертежи",
+        "id": null,
+        "width": 55.671875,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Сначала дешевле. Изменить сортировку",
+        "id": null,
+        "width": 131.84375,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "1-комнатная, 38 м², 11 900 000 ₽. Открыть квартиру",
+        "id": "card-open-demo-k1-204",
+        "width": 303,
+        "height": 128,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Добавить в избранное",
+        "id": "card-heart-demo-k1-204",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "1-комнатная, 38 м², 12 400 000 ₽. Открыть квартиру",
+        "id": "card-open-demo-k2-603",
+        "width": 303,
+        "height": 128,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Добавить в избранное",
+        "id": "card-heart-demo-k2-603",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "2-комнатная, 55 м², 15 800 000 ₽. Открыть квартиру",
+        "id": "card-open-demo-k1-305",
+        "width": 303,
+        "height": 128,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Добавить в избранное",
+        "id": "card-heart-demo-k1-305",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Главная",
+        "id": "tab-index",
+        "width": 83.75,
+        "height": 64,
+        "role": "tab",
+        "pass": true
+      },
+      {
+        "label": "Планировки",
+        "id": "tab-layouts",
+        "width": 83.75,
+        "height": 64,
+        "role": "tab",
+        "pass": true
+      },
+      {
+        "label": "Стройка",
+        "id": "tab-construction",
+        "width": 83.75,
+        "height": 64,
+        "role": "tab",
+        "pass": true
+      },
+      {
+        "label": "Профиль",
+        "id": "tab-profile",
+        "width": 83.75,
+        "height": 64,
+        "role": "tab",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "screen": "detail",
+    "rows": [
+      {
+        "label": "Назад в каталог",
+        "id": "detail-back",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Добавить в избранное",
+        "id": "detail-heart",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Действия с квартирой",
+        "id": null,
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Оставить заявку",
+        "id": "detail-primary-cta",
+        "width": 335,
+        "height": 52,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "1-комнатная, 38 м², 11 900 000 ₽. Открыть квартиру",
+        "id": "card-open-demo-k1-204",
+        "width": 252,
+        "height": 112,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Добавить в избранное",
+        "id": "card-heart-demo-k1-204",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "1-комнатная, 38 м², 12 400 000 ₽. Открыть квартиру",
+        "id": "card-open-demo-k2-603",
+        "width": 252,
+        "height": 112,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Добавить в избранное",
+        "id": "card-heart-demo-k2-603",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Студия, 25 м², 8 900 000 ₽. Открыть квартиру",
+        "id": "card-open-demo-k1-101",
+        "width": 252,
+        "height": 112,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Добавить в избранное",
+        "id": "card-heart-demo-k1-101",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Оставить заявку",
+        "id": "detail-sticky-cta",
+        "width": 335,
+        "height": 52,
+        "role": "button",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "screen": "favorites",
+    "rows": [
+      {
+        "label": "1-комнатная, 38 м², 11 900 000 ₽. Открыть квартиру",
+        "id": "card-open-demo-k1-204",
+        "width": 303,
+        "height": 128,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Убрать из избранного",
+        "id": "card-heart-demo-k1-204",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "1-комнатная, 38 м², 12 400 000 ₽. Открыть квартиру",
+        "id": "card-open-demo-k2-603",
+        "width": 303,
+        "height": 128,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Убрать из избранного",
+        "id": "card-heart-demo-k2-603",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "2-комнатная, 55 м², 15 800 000 ₽. Открыть квартиру",
+        "id": "card-open-demo-k1-305",
+        "width": 303,
+        "height": 128,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Убрать из избранного",
+        "id": "card-heart-demo-k1-305",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Главная",
+        "id": "tab-index",
+        "width": 83.75,
+        "height": 64,
+        "role": "tab",
+        "pass": true
+      },
+      {
+        "label": "Планировки",
+        "id": "tab-layouts",
+        "width": 83.75,
+        "height": 64,
+        "role": "tab",
+        "pass": true
+      },
+      {
+        "label": "Стройка",
+        "id": "tab-construction",
+        "width": 83.75,
+        "height": 64,
+        "role": "tab",
+        "pass": true
+      },
+      {
+        "label": "Профиль",
+        "id": "tab-profile",
+        "width": 83.75,
+        "height": 64,
+        "role": "tab",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "screen": "lead",
+    "rows": [
+      {
+        "label": "Закрыть заявку",
+        "id": "lead-close",
+        "width": 48,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "ИМЯ",
+        "id": "inputname",
+        "width": 335,
+        "height": 52,
+        "role": null,
+        "pass": true
+      },
+      {
+        "label": "НОМЕР ТЕЛЕФОНА",
+        "id": "inputphone",
+        "width": 335,
+        "height": 52,
+        "role": null,
+        "pass": true
+      },
+      {
+        "label": "Позвонить",
+        "id": "lead-channel-call",
+        "width": 163.5,
+        "height": 56,
+        "role": "radio",
+        "pass": true
+      },
+      {
+        "label": "Написать в Telegram",
+        "id": "lead-channel-telegram",
+        "width": 163.5,
+        "height": 56,
+        "role": "radio",
+        "pass": true
+      },
+      {
+        "label": "Я принимаю согласие на обработку персональных данных",
+        "id": "lead-consent",
+        "width": 48,
+        "height": 48,
+        "role": "checkbox",
+        "pass": true
+      },
+      {
+        "label": "Я принимаю согласие на обработку персональных данных",
+        "id": null,
+        "width": 283,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Открыть согласие на обработку персональных данных",
+        "id": "lead-consent-link",
+        "width": 116.421875,
+        "height": 48,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Отправить",
+        "id": "lead-submit",
+        "width": 335,
+        "height": 52,
+        "role": "button",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "screen": "success",
+    "rows": [
+      {
+        "label": "Вернуться в приложение",
+        "id": "lead-success-home",
+        "width": 335,
+        "height": 52,
+        "role": "button",
+        "pass": true
+      },
+      {
+        "label": "Посмотреть планировки",
+        "id": "lead-success-layouts",
+        "width": 335,
+        "height": 52,
+        "role": "button",
+        "pass": true
+      }
+    ]
+  }
+]

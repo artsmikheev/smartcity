@@ -1,0 +1,103 @@
+[
+  {
+    "name": "home",
+    "regions": [
+      {
+        "index": 0,
+        "text": "Дом для новых планов",
+        "box": {
+          "x": 40,
+          "y": 284,
+          "width": 295,
+          "height": 32
+        },
+        "color": "rgb(237, 234, 228)",
+        "fontSize": "28px",
+        "weight": "400"
+      },
+      {
+        "index": 1,
+        "text": "Современная среда в Наукограде",
+        "box": {
+          "x": 40,
+          "y": 320,
+          "width": 295,
+          "height": 22
+        },
+        "color": "rgb(188, 185, 183)",
+        "fontSize": "15px",
+        "weight": "400"
+      }
+    ]
+  },
+  {
+    "name": "detail",
+    "regions": [
+      {
+        "index": 0,
+        "text": "",
+        "box": {
+          "x": 31,
+          "y": 28,
+          "width": 22,
+          "height": 24
+        },
+        "color": "rgb(237, 234, 228)",
+        "fontSize": "22px",
+        "weight": "400"
+      },
+      {
+        "index": 1,
+        "text": "",
+        "box": {
+          "x": 266,
+          "y": 28,
+          "width": 22,
+          "height": 24
+        },
+        "color": "rgb(188, 185, 183)",
+        "fontSize": "22px",
+        "weight": "400"
+      },
+      {
+        "index": 2,
+        "text": "",
+        "box": {
+          "x": 322,
+          "y": 28,
+          "width": 22,
+          "height": 24
+        },
+        "color": "rgb(237, 234, 228)",
+        "fontSize": "22px",
+        "weight": "400"
+      },
+      {
+        "index": 3,
+        "text": "3 ЭТАЖ · КОРПУС 1 · 55 М²",
+        "box": {
+          "x": 20,
+          "y": 331,
+          "width": 335,
+          "height": 14
+        },
+        "color": "rgb(188, 185, 183)",
+        "fontSize": "11px",
+        "weight": "400"
+      },
+      {
+        "index": 4,
+        "text": "2-комнатная квартира",
+        "box": {
+          "x": 20,
+          "y": 353,
+          "width": 335,
+          "height": 74
+        },
+        "color": "rgb(237, 234, 228)",
+        "fontSize": "32px",
+        "weight": "400"
+      }
+    ]
+  }
+]

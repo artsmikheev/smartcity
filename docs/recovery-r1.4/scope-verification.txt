@@ -1,0 +1,11 @@
+Installed Expo 57.0.24
+Installed gradient 57.0.2
+Expo expected gradient ~57.0.2
+SVG runtime 15.15.4
+
+Tab layout SHA256 current
+1acc7a0c77ebaad67b6e673ee2efb5b21c75f3a8e880b73238ac38af48ac59fb  app/(tabs)/_layout.tsx
+Tab layout SHA256 R1.3
+1acc7a0c77ebaad67b6e673ee2efb5b21c75f3a8e880b73238ac38af48ac59fb  -
+
+Unchanged sensitive scope files

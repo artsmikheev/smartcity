@@ -2,7 +2,8 @@ import type { Apartment } from './db';
 
 export type CatalogApartment = Apartment & {
   plan_path: string | null;
-  media_kind: 'plan' | 'concept';
+  media_kind: 'plan' | 'concept' | 'schematic';
+  building_title?: string;
 };
 
 export type CatalogMode = 'apartments' | 'blueprints';

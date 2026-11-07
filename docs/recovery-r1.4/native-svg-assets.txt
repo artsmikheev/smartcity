@@ -1,0 +1,5 @@
+/tmp/smartcity-r14-native/assets/raw/assets_images_plans_studio25.svg
+/tmp/smartcity-r14-native/assets/raw/assets_images_plans_oneroom38.svg
+/tmp/smartcity-r14-native/assets/raw/assets_images_plans_tworoom55.svg
+/tmp/smartcity-r14-native/assets/raw/assets_images_plans_tworoom62.svg
+/tmp/smartcity-r14-native/assets/raw/assets_images_plans_threeroom78.svg

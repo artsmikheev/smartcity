@@ -7,6 +7,11 @@ const localAssets: Readonly<Record<string, () => number | string>> = {
     require("../assets/images/reutov-urban-evening-concept.jpg"),
   "reutov-terrace-view-concept.jpg": () =>
     require("../assets/images/reutov-terrace-view-concept.jpg"),
+  "plans/studio-25.svg": () => require("../assets/images/plans/studio-25.svg"),
+  "plans/one-room-38.svg": () => require("../assets/images/plans/one-room-38.svg"),
+  "plans/two-room-55.svg": () => require("../assets/images/plans/two-room-55.svg"),
+  "plans/two-room-62.svg": () => require("../assets/images/plans/two-room-62.svg"),
+  "plans/three-room-78.svg": () => require("../assets/images/plans/three-room-78.svg"),
 };
 
 export function resolveMediaUrl(

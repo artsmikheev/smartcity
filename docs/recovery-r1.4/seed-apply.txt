@@ -1,0 +1,25 @@
+=== R1.4 seed only, local smartcity_test harness ===
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+INSERT 0 2
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+UPDATE 5
+     slug      |            plan_path            | is_demo
+---------------+---------------------------------+---------
+ studio-25     | asset://plans/studio-25.svg     | t
+ one-room-38   | asset://plans/one-room-38.svg   | t
+ two-room-55   | asset://plans/two-room-55.svg   | t
+ two-room-62   | asset://plans/two-room-62.svg   | t
+ three-room-78 | asset://plans/three-room-78.svg | t
+(5 rows)
+
+ five_svg_demo_layouts
+-----------------------
+ t
+(1 row)
+
+R14_SEED_PSQL_PASS

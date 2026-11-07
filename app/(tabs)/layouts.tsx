@@ -9,7 +9,8 @@ import { CatalogSkeleton, CatalogState } from '@/components/catalog-state';
 import { CatalogFilters } from '@/components/catalog-filters';
 import { COLORS, TYPOGRAPHY, SPACING } from '@/constants/theme';
 import { catalogPreview, useCatalog } from '@/hooks/use-catalog';
-import { apartmentTitle, variantsLabel, visibleApartments } from '@/lib/catalog-model';
+import { useFavorites } from '@/hooks/use-favorites';
+import { variantsLabel, visibleApartments } from '@/lib/catalog-model';
 import { track } from '@/lib/telemetry';
 import type { CatalogMode, PriceSort } from '@/types/catalog';
 
@@ -21,7 +22,7 @@ export default function LayoutsScreen() {
   const [rooms, setRooms] = useState<number | null>(null);
   const [sort, setSort] = useState<PriceSort>('price_asc');
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [favorites, setFavorites] = useState<Set<string>>(() => new Set());
+  const favorites = useFavorites();
   const visible = useMemo(() => visibleApartments(catalog.data, mode, rooms, sort), [catalog.data, mode, rooms, sort]);
   const status = catalog.error ? 'error' : catalog.loading ? 'loading' : visible.length === 0 ? 'empty' : 'content';
 
@@ -37,15 +38,6 @@ export default function LayoutsScreen() {
   const retry = () => {
     if (catalog.preview) router.setParams({ preview: 'content' });
     else catalog.retry();
-  };
-
-  const toggleFavorite = (id: string) => {
-    setFavorites((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
   };
 
   const header = (
@@ -79,7 +71,7 @@ export default function LayoutsScreen() {
     <View testID="catalog-footer" style={styles.footer}>
       <View style={styles.divider} />
       <Text numberOfLines={2} style={styles.footerCopy}>Материалы, цены и наличие уточняются командой проекта.</Text>
-      {catalog.data.some((apartment) => apartment.is_demo) && <Text style={styles.demoCopy}>Демо-данные · концептные изображения, не планировки.</Text>}
+      {catalog.data.some((apartment) => apartment.is_demo) && <Text style={styles.demoCopy}>Схематичные планировки, демо-данные.</Text>}
     </View>
   ) : null;
 
@@ -90,14 +82,14 @@ export default function LayoutsScreen() {
         style={styles.list}
         data={status === 'content' ? visible : []}
         keyExtractor={(apartment) => apartment.id}
-        extraData={favorites}
+        extraData={favorites.apartments}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={header}
         ListHeaderComponentStyle={styles.header}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         renderItem={({ item }) => (
-          <ApartmentCard apartment={item} variant="horizontal" favorited={favorites.has(item.id)} onToggleFavorite={() => toggleFavorite(item.id)} onPress={() => router.push({ pathname: '/lead', params: { type: 'layout', item: apartmentTitle(item).replace('\n', ', ') } })} />
+          <ApartmentCard apartment={item} variant="horizontal" favorited={favorites.isFavorite(item.id)} onToggleFavorite={() => favorites.toggle(item)} onPress={() => router.push({ pathname: '/apartment/[id]', params: { id: item.id, ...(catalog.preview ? { preview: 'content' } : {}) } })} />
         )}
         ListEmptyComponent={status === 'loading' ? <CatalogSkeleton /> : <CatalogState kind={status === 'error' ? 'error' : 'empty'} unavailable={catalog.unavailable} onAction={status === 'error' ? retry : reset} />}
         ListFooterComponent={footer}

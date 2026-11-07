@@ -93,6 +93,9 @@ export default function RootLayout() {
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="oauth/callback" />
+            <Stack.Screen name="apartment/[id]" options={{ title: "Квартира" }} />
+            <Stack.Screen name="lead" options={{ title: "Заявка" }} />
+            <Stack.Screen name="lead/success" options={{ title: "Заявка принята" }} />
           </Stack>
           <StatusBar style="light" />
         </QueryClientProvider>

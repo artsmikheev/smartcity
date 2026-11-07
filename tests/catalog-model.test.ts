@@ -16,7 +16,8 @@ describe('catalog display model', () => {
     expect(catalogDemoApartments.map((apartment) => apartment.id)).toEqual(initial);
   });
   it('filters rooms and can return empty', () => expect(visibleApartments(catalogDemoApartments, 'apartments', 3, 'price_asc')).toEqual([]));
-  it('never labels concept renderings as blueprints', () => expect(visibleApartments(catalogDemoApartments, 'blueprints', null, 'price_asc')).toEqual([]));
+  it('never labels concept renderings as blueprints', () => expect(visibleApartments(catalogDemoApartments.map((row) => ({ ...row, media_kind: 'concept' as const })), 'blueprints', null, 'price_asc')).toEqual([]));
+  it('admits explicitly labeled schematic placeholders', () => expect(visibleApartments(catalogDemoApartments, 'blueprints', null, 'price_asc')).toHaveLength(3));
   it('admits only plans with a media path in blueprint mode', () => {
     const plan = { ...catalogDemoApartments[0], media_kind: 'plan' as const, plan_path: 'https://example.com/plan.jpg' };
     expect(visibleApartments([plan, { ...plan, plan_path: null }], 'blueprints', null, 'price_asc')).toEqual([plan]);

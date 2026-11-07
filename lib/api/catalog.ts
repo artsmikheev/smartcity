@@ -10,13 +10,14 @@ export async function fetchCatalog(signal?: AbortSignal): Promise<CatalogApartme
   if (!supabaseConfigured) throw new Error('Сервис временно недоступен');
 
   const { supabase } = await import('../supabase');
-  let query = supabase.from('apartments').select('*, layouts(plan_path)').eq('published', true);
+  let query = supabase.from('apartments').select('*, layouts(plan_path), buildings(title)').eq('published', true);
   if (signal) query = query.abortSignal(signal);
   const { data, error } = await query;
   if (error) throw error;
-  return (data ?? []).map(({ layouts, ...apartment }) => ({
+  return (data ?? []).map(({ layouts, buildings, ...apartment }) => ({
     ...apartment,
     plan_path: layouts?.plan_path ?? null,
-    media_kind: 'plan',
+    media_kind: layouts?.plan_path?.startsWith('asset://plans/') ? 'schematic' : 'plan',
+    building_title: buildings?.title,
   }));
 }

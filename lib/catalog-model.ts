@@ -26,7 +26,7 @@ export function visibleApartments(
 ): CatalogApartment[] {
   return apartments
     .filter((apartment) => rooms === null || apartment.rooms === rooms)
-    .filter((apartment) => mode !== 'blueprints' || (apartment.media_kind === 'plan' && Boolean(apartment.plan_path)))
+    .filter((apartment) => mode !== 'blueprints' || ((apartment.media_kind === 'plan' || apartment.media_kind === 'schematic') && Boolean(apartment.plan_path)))
     .sort((a, b) => {
       if (a.price === null && b.price === null) return a.id.localeCompare(b.id);
       if (a.price === null) return 1;

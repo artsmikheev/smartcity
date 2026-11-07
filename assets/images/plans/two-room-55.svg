@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="260" viewBox="0 0 240 260">
+<title>Схема 55 м² — демонстрационная, не утверждённая планировка</title>
+<rect width="240" height="260" fill="#121212"/>
+<g stroke="#B88F00" stroke-opacity="0.06" stroke-width="0.5">
+<path d="M0 0V260"/>
+<path d="M8 0V260"/>
+<path d="M16 0V260"/>
+<path d="M24 0V260"/>
+<path d="M32 0V260"/>
+<path d="M40 0V260"/>
+<path d="M48 0V260"/>
+<path d="M56 0V260"/>
+<path d="M64 0V260"/>
+<path d="M72 0V260"/>
+<path d="M80 0V260"/>
+<path d="M88 0V260"/>
+<path d="M96 0V260"/>
+<path d="M104 0V260"/>
+<path d="M112 0V260"/>
+<path d="M120 0V260"/>
+<path d="M128 0V260"/>
+<path d="M136 0V260"/>
+<path d="M144 0V260"/>
+<path d="M152 0V260"/>
+<path d="M160 0V260"/>
+<path d="M168 0V260"/>
+<path d="M176 0V260"/>
+<path d="M184 0V260"/>
+<path d="M192 0V260"/>
+<path d="M200 0V260"/>
+<path d="M208 0V260"/>
+<path d="M216 0V260"/>
+<path d="M224 0V260"/>
+<path d="M232 0V260"/>
+<path d="M240 0V260"/>
+<path d="M0 0H240"/>
+<path d="M0 8H240"/>
+<path d="M0 16H240"/>
+<path d="M0 24H240"/>
+<path d="M0 32H240"/>
+<path d="M0 40H240"/>
+<path d="M0 48H240"/>
+<path d="M0 56H240"/>
+<path d="M0 64H240"/>
+<path d="M0 72H240"/>
+<path d="M0 80H240"/>
+<path d="M0 88H240"/>
+<path d="M0 96H240"/>
+<path d="M0 104H240"/>
+<path d="M0 112H240"/>
+<path d="M0 120H240"/>
+<path d="M0 128H240"/>
+<path d="M0 136H240"/>
+<path d="M0 144H240"/>
+<path d="M0 152H240"/>
+<path d="M0 160H240"/>
+<path d="M0 168H240"/>
+<path d="M0 176H240"/>
+<path d="M0 184H240"/>
+<path d="M0 192H240"/>
+<path d="M0 200H240"/>
+<path d="M0 208H240"/>
+<path d="M0 216H240"/>
+<path d="M0 224H240"/>
+<path d="M0 232H240"/>
+<path d="M0 240H240"/>
+<path d="M0 248H240"/>
+<path d="M0 256H240"/>
+</g>
+<text x="16" y="25" fill="#BCB9B7" font-family="sans-serif" font-size="8">СХЕМА · 55 М²</text>
+<rect x="20" y="48" width="96" height="124" fill="#B88F00" fill-opacity="0.04" stroke="#B88F00" stroke-width="2" stroke-dasharray="265 6 169"/>
+<text x="68" y="64" text-anchor="middle" fill="#BCB9B7" font-family="sans-serif" font-size="8">СПАЛЬНЯ</text>
+<rect x="116" y="48" width="104" height="124" fill="#B88F00" fill-opacity="0.04" stroke="#B88F00" stroke-width="2" stroke-dasharray="277 6 173"/>
+<text x="168" y="64" text-anchor="middle" fill="#BCB9B7" font-family="sans-serif" font-size="8">ГОСТИНАЯ</text>
+<rect x="20" y="172" width="80" height="64" fill="#B88F00" fill-opacity="0.04" stroke="#B88F00" stroke-width="2" stroke-dasharray="181 6 101"/>
+<text x="60" y="188" text-anchor="middle" fill="#BCB9B7" font-family="sans-serif" font-size="8">КУХНЯ</text>
+<rect x="100" y="172" width="62" height="64" fill="#B88F00" fill-opacity="0.04" stroke="#B88F00" stroke-width="2" stroke-dasharray="154 6 92"/>
+<text x="131" y="188" text-anchor="middle" fill="#BCB9B7" font-family="sans-serif" font-size="8">ХОЛЛ</text>
+<rect x="162" y="172" width="58" height="64" fill="#B88F00" fill-opacity="0.04" stroke="#B88F00" stroke-width="2" stroke-dasharray="148 6 90"/>
+<text x="191" y="188" text-anchor="middle" fill="#BCB9B7" font-family="sans-serif" font-size="8">САНУЗЕЛ</text>
+<g stroke="#BCB9B7" stroke-width="0.7" fill="none"><rect x="36" y="76" width="52" height="68"/><path d="M36 90h52"/><rect x="41" y="80" width="42" height="7"/></g>
+<circle cx="58" cy="212" r="12" stroke="#BCB9B7" stroke-width="0.7" fill="none"/>
+<circle cx="172" cy="126" r="17" stroke="#BCB9B7" stroke-width="0.7" fill="none"/>
+<text x="120" y="252" text-anchor="middle" fill="#BCB9B7" font-family="sans-serif" font-size="8">ДЕМО · НЕ В МАСШТАБЕ</text>
+</svg>

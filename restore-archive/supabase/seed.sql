@@ -57,3 +57,10 @@ values
   ('2026-09', 'Сентябрь 2026', 'Демо-отчёт. Процент готовности и фактические этапы не указаны без подтверждения.', '2026-09-01', 'published', now(), true),
   ('2026-10', 'Октябрь 2026', 'Демо-отчёт. Фото и фактические статусы будут добавлены после проверки.', '2026-10-01', 'published', now(), true)
 on conflict (slug) do nothing;
+
+-- R1.4: schematic placeholders, NOT approved apartment plans or measured drawings.
+-- Only the five known demo layouts are touched, including on repeated seed.
+update public.layouts
+set plan_path = 'asset://plans/' || slug || '.svg'
+where is_demo = true
+  and slug in ('studio-25', 'one-room-38', 'two-room-55', 'two-room-62', 'three-room-78');
