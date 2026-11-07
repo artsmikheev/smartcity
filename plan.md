@@ -1,9 +1,177 @@
+# План реализации: мобильное приложение ЖК «Умный город»
 
+## Цель текущего этапа
+
+Собрать проверяемый mobile-first MVP клиентского приложения для ЖК «Умный город» в Реутове. Основной сценарий — быстро разобраться в проекте, перейти к планировкам и оставить заявку на консультацию/подбор. Данные, которые требуют подтверждения ответственным лицом (цены, наличие, сроки, расстояния, характеристики, юридические формулировки), не зашиваются как факты: в прототипе они явно отмечены как демонстрационные или ожидающие проверки.
+
+## Реализуемый объём MVP
+
+- Главный экран с крупным CTA, краткой ценностью проекта, компактным статусом стройки, актуальной карточкой акции/события и быстрыми входами в планировки, стройку и контакты.
+- Разделы в нижней навигации: «Главная», «Планировки», «Стройка», «Профиль».
+- Внутренние быстрые экраны/модальные состояния: «О проекте», «Акции и новости», «Контакты», «FAQ».
+- Экран планировок с фильтрами по комнатности/метражу и демонстрационными карточками без утверждения реальных цен и наличия.
+- Карточка варианта с CTA «Получить планировку», «Узнать условия», «Заказать звонок».
+- Единая заявка в модальном листе: имя, телефон, удобный канал, комментарий, согласие; клиентская валидация, защита от повторного нажатия, подтверждение с ID демо-заявки и следующим шагом.
+- Раздел «Ход строительства» с лентой этапов, датой съёмки/публикации и пометкой о необходимости проверки публикации.
+- Контакты с ссылками на Telegram и MAX из утверждённых материалов, без хранения токенов в клиенте.
+- Личный кабинет-заглушка с избранным, заявками, уведомлениями и настройками как будущими возможностями.
+- App Insights-ready слой телеметрии в клиенте: типизированные события навигации и CTA, безопасный no-op по умолчанию; секреты и connection string не попадают в мобильный bundle. Полноценная отправка через серверный адаптер будет отдельным этапом после определения хостинга/ресурса Azure.
+
+## Что сознательно не входит в первый проход
+
+- Реальный CRM, Telegram Bot API, push, RBAC, база квартир и админка контента — оставляются на серверный этап; UI и типы данных подготовлены так, чтобы подключить их без смены пользовательского сценария.
+- Автоматическое юридическое бронирование — не реализуется; CTA создаёт заявку на связь.
+- Неподтверждённые цены, сроки, наличие, площади и расстояния не выдаются за актуальные.
+
+## Архитектура и структура проекта
+
+- `app/(tabs)/`: клиентские маршруты и нижняя навигация Expo Router.
+- `app/(tabs)/index.tsx`: главный экран и быстрые действия.
+- `app/(tabs)/layouts.tsx`: каталог планировок и фильтры.
+- `app/(tabs)/construction.tsx`: ход строительства.
+- `app/(tabs)/profile.tsx`: кабинет и настройки.
+- `app/lead.tsx`: модальный поток заявки.
+- `app/about.tsx`, `app/contacts.tsx`, `app/faq.tsx`: информационные экраны.
+- `components/`: повторно используемые карточки, кнопки, pill-фильтры, модальные состояния.
+- `constants/`: токены бренда, mock-данные и copy, помеченные как демонстрационные.
+- `lib/telemetry.ts`: безопасная абстракция App Insights-ready событий.
+- `server/` и `drizzle/`: оставить совместимыми со стартером для следующего этапа CRM/лидов; не класть секреты в клиентский код.
+- `public/manus-routes.json`: полный статический список экранов для маршрутизации Preview.
+
+## Дизайн-система
+
+### Design Movement
+
+**Digital Bauhaus / soft industrial editorial**: инженерная точность и модульность без холодной технократии; интерфейс похож на спокойный навигатор по будущему району.
+
+### Core Principles
+
+1. **Одна ясная задача на экран** — крупные CTA и короткие подписи, пригодные для быстрого просмотра в дороге.
+2. **Архи��ектура как интерфейс** — модульные карточки, контуры планов и прогресс-лента вместо декоративного шума.
+3. **Доверие через статусы** — даты обновления, «демо/на проверке», явное разделение факта и ожидания.
+4. **Человеческий ритм** — мягкие радиусы, спокойная типографика, крупная зона касания и короткая обратная связь.
+
+### Color Philosophy
+
+Палитра извлечена из брендбука SmartCity_BB_sketch_CORR9_26.02.26.pdf: фирменный графит, светлый нейтральный фон, золотой акцент и серый вторичный цвет. Графит создаёт собранную инженерную среду; светлый `#EDEAE4` поддерживает читаемость; золото используется для действий и прогресса; серый держит вторичные подписи и границы.
+
+- Graphite: `#484848`
+- Warm white: `#EDEAE4`
+- Brand gold: `#B88F00`
+- Brand gray: `#8A8887`
+
+### Layout Paradigm
+
+Вертикальный «маршрутный» поток: визуальный заголовок → один основной CTA → компактная диагностическая строка → горизонтальные карточки-срезы → постоянная нижняя навигация. Не использовать равномерную сетку одинаковых плиток; секции имеют разную ширину и темп.
+
+### Signature Elements
+
+- Пунктирный маршрутный маркер и тонкие инженерные линии на карточках.
+- Лаймовый «signal dot» для актуального шага/статуса.
+- Срезанные углы/скруглённые блоки с метками `ПРОЕКТ`, `ДЕМО`, `ПРОВЕРКА`.
+
+### Interaction Philosophy и Animation
+
+Каждое нажатие отвечает понятной микрореакцией: лёгкое уменьшение CTA, haptic на native, появление листа заявки снизу. Анимации 160–240 мс, easing ease-out, без постоянного мерцания; прогресс стройки появляется коротким заполнением полосы. Уважать `prefers-reduced-motion` на Web и не использовать длинные параллаксы в сценарии для дороги.
+
+### Typography System
+
+Использовать системный sans-serif Expo/NativeWind с сильной иерархией: заголовок 34/38, секционный заголовок 22/26, body 15/21, labels 11/14 с увеличенным трекингом. Заголовки полужирные, основной текст regular; числовые статусы — tabular/monospace-подобный системный стиль, если доступен.
+
+### Brand Essence
+
+**Навигатор по будущему дому для людей, которые выбирают городскую среду осознанно — спокойно, конкретно и без рекламного шума.**
+
+Характер: **собранный, живой, честный**.
+
+### Brand Voice
+
+Коротко, по делу, с уважением к неопределённости данных. Примеры:
+
+- «Выберите следующий шаг — мы подготовим детали.»
+- «Статус проекта обновлён. Даты и условия проверяет команда проекта.»
+
+### Wordmark & Logo
+
+Знак приложения — компактная модульная интерпретация фирменного вордмарка «УМНЫЙ ГОРОД»; иконка использует палитру брендбука. Финальное использование логотипа в native bundle остаётся под контролем бренд-команды.
+
+### Signature Brand Color
+
+**Brand gold `#B88F00`** — фирменный цвет действия и движения вперёд; не использовать его для больших фонов или длинных текстов.
+
+## Полный build workflow
+
+1. Синхронизировать управляемую схему стартерной базы через `pnpm db:push` до первого API/OAuth трафика.
+2. До первого запуска зарегистрировать host-managed TypeScript diagnostics и исправить actionable ошибки.
+3. Реализовать экраны и повторно используемые компоненты в фиксированном Expo/React Native/TypeScript стартере, сохранив сервер/API на порту 3000 и Metro на 8081.
+4. Запустить отсутствующие listeners через `pnpm dev`/`pnpm dev:server`/`pnpm dev:metro`, проверить оба порта.
+5. Выполнить `pnpm check`, `pnpm lint` и `pnpm test` после реализации.
+6. Проверить Preview на мобильном viewport и основные touch-потоки; native-only функции (push, haptics, deep links) считать не подтверждёнными Web Preview до реального device check.
+7. Подготовить проект к checkpoint через Git managed repository; не включать auto-publish и не заявлять о production-публикации без отдельного подтверждённого результата.
+
+## Ограничения и риски
+
+- Брендбук загружен и применён к палитре интерфейса; актуальные планировки, прайс-листы, юридические тексты и фото/рендеры по-прежнему не приложены, поэтому mock-контент явно маркирован.
+- Пользователь сообщил, что сейчас едет с Южного въезда; интерфейс не должен требовать длинного чтения или сложной навигации. Любые действия, связанные с отправкой формы, должны быть явным осознанным tap-flow и не выполняться автоматически.
+- Azure App Insights не является нативной функцией Expo starter автоматически: в MVP оставить безопасный интерфейс событий, а серверную отправку подключать после уточнения хостинга и connection string через защищённые секреты.
+
+## Git discipline
+
+После каждой принятой фазы и после каждого крупного изменения обязательно:
+
+```bash
+git add -A
+git commit -m "Phase X: ..."
+git push origin main
+git tag phase-X
+git push --tags
+```
+
+Нельзя переходить к следующей фазе без проверки, что commit присутствует в `origin/main`, а tag опубликован. Это обязательная защита от потери работы при завершении или переключении сессии.
+
+
+## Recovery R1.2 — текущий принятый scope
+
+После потери файлов R1.1 проверена на локальном PostgreSQL 16.15 compatibility harness. SQL-спецификация находится в restore-archive/supabase/; она не изменяется в R1.2. GitHub — отдельная страховочная копия (remote github); Manus-managed origin не меняется. Фазы сохраняются в github/main, и теги проверяются через ls-remote; это не Manus checkpoint и не production publish.
+
+Текущая финальная дизайн-система заменяет исторический графит выше: premium dark editorial; background #1C1B1A, cardBackground #262422, cardDeep #121212, foreground #EDEAE4, muted #BCB9B7, mutedDark #8A8887 (декоративный), accent #B88F00, accentForeground #1A1A1A, border #9A9896, error #F37A72, success #4ADE80. Значения принадлежат constants/app-data.ts; constants/theme.ts — единственная публичная точка входа. Шрифты: PlayfairDisplay_400Regular для serif ramp, sans системный без fontFamily. Mock-данные отдельно в constants/mock-data.ts, без изменений содержания. NativeWind и legacy hooks отображают семантические имена на эти же токены, без второй палитры.
+
+Реализуем только фундамент: SQL-типы 16 таблиц/7 enum и submit_lead/has_role из восстановленного SQL; Supabase client с AsyncStorage и placeholder при отсутствии env; font loader при сохранении Stack/провайдеров; глобальный floating pill с safe area. Конкретные экраны, ApartmentCard и форма не перерисовываются — только импорты/переименования удалённых токенов и paddingBottom 130 у таб-ScrollView. Native-only выводы проверяются отдельно от Expo Web.
+
+Уточнение пользователя от 07.11.2026: НЕ создавать отсутствующий favorites маршрут; временно оставить Стройка третьим табом. Поэтому текущие четыре таба: Главная / Планировки / Стройка / Профиль. Pill: left/right 20, bottom 20+insets.bottom, height 64, radius 32, rgba(28,27,26,0.95), boxShadow 0 8px 24px rgba(0,0,0,0.4). Pressable height 64, selected state и Ionicons. Активный circle 36/icon20, неактивный icon22, labels10; motion только лёгкая opacity обратная связь без slide между tabs.
+
+Ожидается pnpm check/lint/test, Expo Web screenshot 375×812 и contrast расчёт. Baseline этой восстановленной копии: 25 passing, 1 skipped (не потерянные прежние 30). После commit R1.2 и tag recovery-r1.2 на GitHub — СТОП до приёмки, R1.3+ не начинать.
+
+Финальная R1.2 проверка: pnpm check/lint/test PASS (25 passed, 1 skipped), Supabase compile-only RPC probe PASS, Playwright 375×812 PASS (pill 335×64, hit areas 83.75×64, четыре перехода/selected state/Enter); Playfair и Ionicons assets загружены. Полные evidence: docs/recovery-r1.2/. Marker для публикации страховочной копии: recovery-r1.2. R1.3 не начинать до приёмки.
+
+## Recovery R1.3 — действующая числовая UI-спецификация
+
+R1.2 сохранена на GitHub попыткой A: github/main и recovery-r1.2 = ed1067c80d92c179eba59f5cf17464f0622b1800; барьер закрыт. Текущий scope — только reusable horizontal ApartmentCard и app/(tabs)/layouts.tsx по pasted_content_19.txt. Все цвета/типографика берутся из constants/theme; новая композиция строго соответствует списку чисел, без градиентов и дополнительных теней. Card height160/radius20/pad16/55:45/gap12, title20/meta11/price22, отделённые shadow/clip wrappers, 48px heart. Каталог — editorial header36, underline mode controls, sort row, FlatList и четыре состояния. R1.2 tab bar не меняется.
+
+Структура: types/catalog.ts определяет display-проекцию Apartment с plan_path и типом media; lib/catalog-model.ts — чистые форматирование/фильтр/сортировка; lib/storage.ts — whitelist asset:// + HTTP URL, иначе null; lib/api/catalog.ts — только клиентский read published apartments и layouts (не новые SQL/backend схемы); hooks/use-catalog.ts — TanStack Query, guard при отсутствии env и явный dev-preview; components/apartment-card.tsx, components/catalog-state.tsx, components/catalog-filters.tsx — каталоговые компоненты без новых routes.
+
+Default при отсутствии Supabase credentials — error с «Сервис временно недоступен». Скриншоты content/loading/empty берутся с реального layouts через __DEV__-only параметр preview, используя demo rows в constants/mock-data.ts. Коммерческие числа скопированы из восстановленного is_demo seed, не считаются текущими предложениями. Старые mock exports, которыми пользуются другие экраны, не меняются. Реальных подтверждённых plan images нет: demo rows используют существующие project concept renderings; их назначение явно отмечено в footer и отчёте, media_kind=concept. Чертежи фильтруют только plan media, поэтому без реальных планов пусты, а не выдуманы. Source list/classification остается заменяемым через API.
+
+Mode/filter/sort/heart — локальный клиентский state, без Supabase write и без заявления о cross-device favorites sync. Нажатие карточки сохраняет переход в существующую форму запроса планировки; detail route пока не создаётся. Header фильтр открывает компактный native Modal в этом же экране; новые экраны не добавляются. Только простая press opacity feedback, no shimmer/gradient/motion additions. SafeArea и content paddingBottom130 предотвращают конфликт с принятой pill.
+
+Доступная host diagnostics config по-прежнему недоступна из-за addon workspace recovery; используется штатный pnpm check (tsc), без отключения ошибок или обхода типов. Метро8081 переиспользуется. Реальные Supabase credentials, API/SQL writes и новый backend не нужны для этой UI-фазы. После четырёх screenshot/checks и Git commit/tag — стоп до приёмки R1.4.
+
+R1.3 source/evidence: check/lint/test PASS (75 passed + 1 original skipped), actual card335×160 / image128×128 / heart48×48 + visual44; header text gaps8/24 verified; exactlyone Web shadow0/8/16/.35; 4states and controls PASS, footerbottom682 beforepilly728. Artifacts docs/recovery-r1.3/. Used text-pairs AA PASS; gold/foreground2.51 notused; prescribed70% heart overwhite doesnot guarantee UI3:1 (2.11) — P1 todiscuss, not silent palette change. R1.2 client stays unchanged; guarded lazy catalog client import avoids unconfiguredSSR window error. Source/SQL/tabbar/home/leadscope confirmed. Await R1.3 visualapproval, R1.4 NOT started.
+
+## Recovery R1.4 — каталог fixes + MVP экраны (07.11.2026)
+
+Основание: технически принят R1.3 ea31289 и pasted_content_20.txt. Premium dark editorial, Playfair, gold, spacing4/8. Tab bar и композиция каталога не меняются; только схемы, заданная card-shadow/border, heart contrast + связь с новым detail/sharedfavorites. Структура: assets/images/plans/5SVG и XML manifest из scripts/generate-plans.mjs для SvgXml native/web; literal requires resolver сохранены. SVG — схематичные placeholders, «Схема», не размерные/утверждённые планы. Seed plan_path в восстановленной копии отсутствует: idempotent update для 5 demo layouts, только локальный smartcity_test PostgreSQL harness, без migration/production изменений. Коммерческие поля только seed: 55m² floor3 sold, отделка по запросу, никаких invented available8floor.
+
+app/apartment/[id], tabs/index, tabs/favorites, lead и lead/success — экраны по присланной структуре; rootStack/manifest расширить, tabs/_layout не редактировать. Favorites доступен через Home/Detail menu; не новый видимый tab. Shared local favorite store и guarded read-onlyAPI. Home только существующие JPG и demo seed headlines, никаких реальных relative date claims. HTML detail/package1 отсутствуют после recovery; текст текущей спекы — источник, не новая концепция.
+
+RHF/Zod, inputs16/52, maskedphone+7, consent из active version, validation/submitting/errors, номер только реальныйRPC response. __DEV__ explicit previewstates для screenshots, успехdemo отдельно помечен, без таймеров/fake mutation. БезSupabase form unavailable, неaccepted. Demo legalconsent не считается productionapproved; demo apartment IDs не передаются как настоящие UUID. PII не в URL/telemetry/Git. Motionnative/immediatepress, градиенты только home/detailhero/sticky. NativeSVG bundle проверка +Web screenshots, actualnative неclaim без device. После check/lint/test/push github/tag recovery-r1.4 — стоп, Package2 не начинать. GitHubbackup, canonicalorigin неизменён.
+
+R1.4 implementation/evidence: pnpm check/lint/test PASS (177 passed, 1 unchanged skipped), Android export:embed PASS и 5 SVG assets. Production Expo Web 375×812: 4 catalog states, SVG schemes, footer, Detail content/not-found, Home/Favorites content+empty, Lead default/validation/submitting и honest Success preview/unverified. Общий store переносит favorites между экранами и reload; реальные заявочные RPC в UI-тестах не вызваны. Guard не принимает demo object даже с UUID и проверяет is_demo readonly; опубликованный demo consent блокирует отправку. Hero metadata contrast 2.042→8.139, все проверенные semantic pairs проходят AA; декоративный cardEdge1.11 не control boundary. 59 DOM targets ≥48×48; source tab layout hash не изменён. Hardware-back/edge guard только реальная sending, ordinary back свободен, success после снятия guard. Full report/screens/measurements: docs/recovery-r1.4/. Native device/simulator visual и hardware gesture pass НЕ заявлены, это отдельная открытая проверка. Сохранение — один обычный push github/main + recovery-r1.4; canonicalorigin не меняется. СТОП после delivery: user visual acceptance, без Package2/новых серверных backend изменений.
 
 ## Recovery R1.5 — Detail CTA + notify-lead Edge Function (07.11.2026)
 
-Основание: `pasted_content_21.txt`, предыдущий remote SHA `c9df63f`. В Detail удалена только контентная CTA; оставлен `SPACING.xxxl` spacer 32px, sticky CTA сохранена. Actual Expo Web capture подтвердил одну видимую `detail-sticky-cta` 335×52 внутри sticky 375×104.
+В Detail удалена только контентная CTA; оставлен `SPACING.xxxl` spacer 32px, sticky CTA сохранена. Actual Expo Web capture подтвердил одну видимую `detail-sticky-cta` 335×52 внутри sticky 375×104.
 
-Добавлена локальная Supabase Edge Function `supabase/functions/notify-lead` для INSERT webhook leads → Telegram. Secret validation предшествует payload parsing; type/table/schema проверяются; Telegram values HTML-escaped; error responses 405/401/400/500 типизированы; логи содержат только public_reference/request_type/error, без name/phone/comment. Deno tests mock fetch и проверяют 6 сценариев. `supabase/functions` исключён из Expo tsconfig и Vitest discovery, потому что проверяется отдельным Deno runtime.
+Добавлена локальная Supabase Edge Function `supabase/functions/notify-lead` для INSERT webhook leads → Telegram. Secret validation предшествует payload parsing; type/table/schema проверяются; Telegram values HTML-escaped; responses 405/401/400/500 типизированы; логи содержат только `public_reference`, `request_type` и безопасный код ошибки, без `name`/`phone`/`comment`. Deno tests mock fetch и проверяют 6 сценариев.
 
-`pnpm check`, `pnpm lint`, `pnpm test` PASS: 177 passed, 1 skipped. `deno test --allow-env supabase/functions/notify-lead/index.test.ts` PASS: 6 passed, 0 failed. Deploy в Supabase, Telegram bot, Dashboard Database Webhook и реальные secrets не выполнялись. Package2, tab bar, catalog, Home, Favorites, Lead и SQL/RLS не менялись. Evidence и отчёт: `docs/recovery-r1.5/`, `docs/BACKEND-R2.md`. После commit/tag — стоп до приёмки R1.5.
+`pnpm check`, `pnpm lint`, `pnpm test` PASS: 177 passed, 1 skipped. `deno test --allow-env supabase/functions/notify-lead/index.test.ts` PASS: 6 passed, 0 failed. Deploy в Supabase, Telegram bot, Dashboard Database Webhook и реальные secrets не выполнялись. Package 2, tab bar, catalog, Home, Favorites, Lead и SQL/RLS не менялись. Evidence и отчёт: `docs/recovery-r1.5/`, `docs/BACKEND-R2.md`.
